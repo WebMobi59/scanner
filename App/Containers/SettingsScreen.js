@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {View, Text, Alert, ScrollView} from 'react-native'
+import { View, Text, Alert, ScrollView, SafeAreaView, TouchableOpacity, Image, } from 'react-native'
 import { compose, withPropsOnChange } from 'recompose'
 import { get as _get } from 'lodash'
 import * as Animatable from 'react-native-animatable'
@@ -17,6 +17,7 @@ import CloseButton from '../Components/CloseButton'
 import ApolloClient from '../Lib/Apollo'
 import withData from '../Decorators/withData'
 import SageActions from '../Redux/SageRedux'
+import SegmentedControlTab from "react-native-segmented-control-tab";
 
 // React Apollo
 import { withAuth, withLogout } from '../GraphQL/Account/decorators'
@@ -42,11 +43,28 @@ class SettingsScreen extends ValidatedFormScreen {
       displayName: props.user.displayName,
       email: props.user.email,
       visibleHeight: Metrics.screenHeight,
-      loading: false
+      loading: false,
+      selectedIndex1: 0,
+      selectedIndex2: 0
     }
 
     this.scrollY = 0
   }
+
+  handleIndexChange(type, index) {
+    if (type == 1) {
+      this.setState({
+        ...this.state,
+        selectedIndex1: index
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        selectedIndex2: index
+      });
+    }
+
+  };
 
   componentWillReceiveProps(newProps) {
     const { user: oldUser } = this.props
@@ -94,7 +112,7 @@ class SettingsScreen extends ValidatedFormScreen {
         { text: 'Delete', onPress: resetAllTheData, style: 'destructive' },
         {
           text: 'Cancel',
-          onPress: () => {
+          onPress: () =>
             console.log('Cancel')
           }
         }
@@ -115,30 +133,129 @@ class SettingsScreen extends ValidatedFormScreen {
     const { loading } = this.state
 
     return (
-      <View style={{ height: this.state.visibleHeight, backgroundColor: Colors.primary }}>
-        <ScrollView
-          style={Styles.mainContainer}
-          contentContainerStyle={{}}
-        >
-            <Animatable.View style={[Styles.accountContainer, { height: this.state.visibleHeight }]}>
-              <View style={Styles.navBar}>
-                <CloseButton onPress={this.handleClose} />
-              </View>
-              <View style={Styles.infoSection}>
-                <Info label="Logged in as:" value={auth.session.user.displayName} />
-                <Info
-                  label="Store:"
-                  value={toTitleCase(_.get(_.find(prStores.result, { key: auth.session.user.photoEntry.store }), 'name'))}
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={{ alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: 20, paddingTop: 20 }}>
+            <TouchableOpacity style={{}} onPress={this.handleClose}>
+              <Image source={Images.closeBlack} style={{ width: 24, height: 24 }} />
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            style={{ flex: 1, paddingHorizontal: 15 }}
+            contentContainerStyle={{}}
+          >
+            <View>
+              <Text style={{ color: '#999', fontSize: 18, textTransform: 'uppercase' }}>Hi, {auth.session.user.displayName}</Text>
+              <Text style={{ color: 'rgb(30,38,82)', fontSize: 28, }}>Account</Text>
+            </View>
+            <View style={{ marginTop: 35 }}>
+              <Text style={{ color: 'rgb(30,38,82)', fontSize: 16 }}>{this.state.selectedIndex1 == 0 ? 'Photo' : 'Runner'} Mode</Text>
+              <Text style={{ color: '#999', fontSize: 14 }}>{this.state.selectedIndex1 == 0 ? 'Capturing photos of products' : 'Checking and pulling products'}</Text>
+              <View style={{ marginTop: 15 }}>
+                <SegmentedControlTab
+                  tabsContainerStyle={{ width: '80%', height: 36 }}
+                  values={["PHOTO MODE", "RUNNER MODE"]}
+                  selectedIndex={this.state.selectedIndex1}
+                  onTabPress={(index) => this.handleIndexChange(1, index)}
+                  activeTabStyle={{ backgroundColor: 'rgb(68,113,250)', borderColor: 'rgb(68,113,250)' }}
+                  tabStyle={{ borderColor: 'rgb(68,113,250)' }}
+                  activeTabTextStyle={{ color: 'white', fontSize: 14 }}
+                  tabTextStyle={{ color: 'rgb(68,113,250)', fontSize: 14 }}
                 />
-                <Info label="App version:" value={`v${VersionNumber.appVersion} — Build ${VersionNumber.buildVersion}`} />
               </View>
-              <Button dark onPress={this.handleProductChecklist} text="Product Checklist" />
-              <Button onPress={this.handleSelectPartner} text="Select Partner" />
-              <Button onPress={this.handleSelectStore} text="Select Store" />
-              <Button onPress={this.handleResetAllTheData} text="RESET ALL DATA" style={Styles.resetButton} />
-              <Button loading={loading} onPress={this.handlePressLogout} text="Log Out" style={Styles.logoutButton} />
-            </Animatable.View>
-        </ScrollView>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ width: '60%' }}>
+                <Text style={{ color: 'rgb(30,38,82)', fontSize: 16 }}>Store</Text>
+                <Text style={{ color: '#999', fontSize: 14 }}>Kroger - Anderson Township</Text>
+              </View>
+              <TouchableOpacity onPress={this.handleSelectStore} style={{ backgroundColor: 'rgb(68,113,250)', borderRadius: 3, paddingVertical: 10, width: '40%' }}>
+                <Text style={{ fontSize: 14, color: 'white', textAlign: 'center' }}>SELECT STORE</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ width: '60%' }}>
+                <Text style={{ color: 'rgb(30,38,82)', fontSize: 16 }}>App Version</Text>
+                <Text style={{ color: '#999', fontSize: 14 }}>{`v${VersionNumber.appVersion} — Build ${VersionNumber.buildVersion}`}</Text>
+              </View>
+              <TouchableOpacity style={{ backgroundColor: 'rgb(68,113,250)', borderRadius: 3, paddingVertical: 10, width: '40%' }}>
+                <Text style={{ fontSize: 14, color: 'white', textAlign: 'center' }}>GET UPGRADE</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+
+            <View>
+              <Text style={{ color: 'rgb(30,38,82)', fontSize: 16 }}>Product Capture Priority</Text>
+              <Text style={{ color: '#999', fontSize: 14 }}>
+                {this.state.selectedIndex2 == 0 && 'Capturing products that must be done in this store'}
+                {this.state.selectedIndex2 == 1 && 'Capturing high-priority products that are likely in this store'}
+                {this.state.selectedIndex2 == 2 && 'Capturing any possible product that needs capture'}
+              </Text>
+              <View style={{ marginTop: 15 }}>
+                <SegmentedControlTab
+                  tabsContainerStyle={{ width: '100%', height: 36 }}
+                  values={["STORE LIST", "HIGH PRIORITY", "ALL PRODUCTS"]}
+                  selectedIndex={this.state.selectedIndex2}
+                  onTabPress={(index) => this.handleIndexChange(2, index)}
+                  activeTabStyle={{ backgroundColor: 'rgb(68,113,250)', borderColor: 'rgb(68,113,250)' }}
+                  tabStyle={{ borderColor: 'rgb(68,113,250)', fontSize: 14 }}
+                  activeTabTextStyle={{ color: 'white' }}
+                  tabTextStyle={{ color: 'rgb(68,113,250)', fontSize: 14 }}
+                />
+              </View>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={{ width: '80%' }}>
+                  <Text style={{ color: 'rgb(30,38,82)', fontSize: 16 }}>Session Capture Status</Text>
+                </View>
+                <Image source={Images.arrowRight} sty={{ width: 18, height: 18 }} />
+              </View>
+              <Text style={{ color: '#999', fontSize: 14 }}>125 Captured; 68 Synched; 57 Pending Synch</Text>
+
+              <View style={{ width: '80%', height: 6, borderRadius: 3, backgroundColor: '#ccc', marginTop: 20 }}>
+                <View style={{ width: '45%', height: 6, borderRadius: 3, backgroundColor: 'rgb(28,222,139)' }}></View>
+              </View>
+              <Text style={{ color: '#999', fontSize: 14, marginTop: 5 }}>Synch Status: 57% synched to server</Text>
+              <TouchableOpacity style={{ backgroundColor: 'rgb(68,113,250)', borderRadius: 3, marginTop: 20, paddingVertical: 10, width: '60%' }}>
+                <Text style={{ fontSize: 14, color: 'white', textAlign: 'center' }}>FORCE MANUAL SYNC</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={{ width: '80%' }}>
+                  <Text style={{ color: 'rgb(30,38,82)', fontSize: 16 }}>Your Messages</Text>
+                </View>
+                <Image source={Images.arrowRight} sty={{ width: 18, height: 18 }} />
+              </View>
+              <Text style={{ color: '#999', fontSize: 14 }}>0 messages</Text>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <TouchableOpacity onPress={this.handleProductChecklist} style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Image source={Images.diary} style={{ marginRight: 20 }} />
+              <Text style={{ color: 'rgb(68,113,250)', fontSize: 16 }}>View Product Checklist</Text>
+            </TouchableOpacity>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Image source={Images.sms} style={{ marginRight: 20 }} />
+              <Text style={{ color: 'rgb(68,113,250)', fontSize: 16 }}>Message Support</Text>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <TouchableOpacity onPress={this.handleResetAllTheData} style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Image source={Images.delete} style={{ marginRight: 20 }} />
+              <Text style={{ color: 'rgb(241,50,104)', fontSize: 16 }}>Reset All Data & Restart Session</Text>
+            </TouchableOpacity>
+            <View style={{ height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25 }}></View>
+            <TouchableOpacity onPress={this.handlePressLogout} style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <Image source={Images.logout} style={{ marginRight: 20 }} />
+              <Text style={{ color: 'rgb(241,50,104)', fontSize: 16 }}>Log Out</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </SafeAreaView>
       </View>
     )
   }

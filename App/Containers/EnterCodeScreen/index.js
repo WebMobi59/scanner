@@ -4,15 +4,14 @@ import ReactNative, { View, ScrollView, Text, Keyboard, UIManager, AsyncStorage 
 import { compose, withPropsOnChange } from 'recompose'
 import { get as _get } from 'lodash'
 import * as Animatable from 'react-native-animatable'
-import _ from 'lodash'
 
-import * as inputValidators from '../Lib/InputValidators'
-import { keyboardDidShow, keyboardDidHide } from '../Lib/ComponentEventHandlers'
-import Button from '../Components/Button'
-import ValidatedTextInput from '../Components/ValidatedTextInput'
+import * as inputValidators from '@Lib/InputValidators'
+import { keyboardDidShow, keyboardDidHide } from '@Lib/ComponentEventHandlers'
+import Button from '@Components/Button'
+import ValidatedTextInput from '@Components/ValidatedTextInput'
 
 // React Apollo
-import { withAuth, withCreateAccount, withLogin } from '../GraphQL/Account/decorators'
+import { withAuth, withCreateAccount, withLogin } from '@GraphQL/Account/decorators'
 
 class EnterCodeScreen extends PureComponent {
   static propTypes = {
@@ -209,7 +208,7 @@ const enhance = compose(
 export default enhance(EnterCodeScreen)
 
 import { StyleSheet } from 'react-native'
-import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '../Themes'
+import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '@Themes'
 
 const Styles = StyleSheet.create({
   ...ApplicationStyles.screen,

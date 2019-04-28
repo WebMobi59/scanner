@@ -1,24 +1,18 @@
-import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
-import ReactNative, { View, ScrollView, Text, Keyboard, UIManager, AsyncStorage } from 'react-native'
+import { View, Text } from 'react-native'
 import { compose, withPropsOnChange } from 'recompose'
 import { get as _get } from 'lodash'
 import * as Animatable from 'react-native-animatable'
-import _ from 'lodash'
+import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '@Themes'
 
-import * as inputValidators from '../Lib/InputValidators'
-import { keyboardDidShow, keyboardDidHide } from '../Lib/ComponentEventHandlers'
-import Button from '../Components/Button'
-import ValidatedTextInput from '../Components/ValidatedTextInput'
+import {
+    Wrapper
+} from './styles'
 
 // React Apollo
-import { withAuth, withCreateAccount, withLogin } from '../GraphQL/Account/decorators'
+import { withAuth, withCreateAccount, withLogin } from '@GraphQL/Account/decorators'
 
 class ModeSelectorScreen extends PureComponent {
-
-  state = {
-    visibleHeight: Metrics.screenHeight,
-  }
 
   handleEnterPhotoMode = () => {
     this.props.navigation.navigate('PartnerSelectorScreen', { transition: 'card' })
@@ -29,10 +23,9 @@ class ModeSelectorScreen extends PureComponent {
   }
 
   render() {
-    const { visibleHeight, code, loading, error } = this.state
 
     return (
-      <View style={{ height: visibleHeight }}>
+      <Wrapper>
         <View key="logoRow" style={Styles.promptRow}>
           <Animatable.Image source={Images.barcodeBlack} animation="fadeIn" />
           <Animatable.Text style={Styles.prompt} animation="fadeIn">
@@ -47,7 +40,7 @@ class ModeSelectorScreen extends PureComponent {
         </View>
 
         <Text style={Styles.inputTitle}>You'll be able to change this later</Text>
-      </View>
+      </Wrapper>
     )
   }
 }
@@ -66,7 +59,6 @@ const enhance = compose(
 export default enhance(ModeSelectorScreen)
 
 import { StyleSheet } from 'react-native'
-import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '../Themes'
 
 const Styles = StyleSheet.create({
   ...ApplicationStyles.screen,

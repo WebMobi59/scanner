@@ -85,6 +85,7 @@
     "react-native-modal-picker": "^0.0.16",
     "react-native-progress": "^3.3.0",
     "react-native-search-bar": "^3.0.0",
+    "react-native-segmented-control-tab": "^3.4.0",
     "react-native-slider": "^0.11.0",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-sortable-list": "^0.0.22",

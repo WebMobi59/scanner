@@ -261,7 +261,7 @@ class LoginScreen extends ValidatedFormScreen {
               />
               <Text
                 style={Styles.link}
-                onPress={() => this.props.navigation.navigate('EnterCodeScreen', { transition: 'card' })}
+                onPress={() => this.props.navigation.navigate('ModeSelectorScreen', { transition: 'card' })}
               >
                 or sign up
               </Text>
