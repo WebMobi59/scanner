@@ -6,7 +6,21 @@ import * as Animatable from 'react-native-animatable'
 import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '@Themes'
 
 import {
-    Wrapper
+    Wrapper,
+    ImageWrapper,
+    BarcodeImage,
+    WelcomeTextWrapper,
+    WelcomeText,
+    SelectText,
+    SelectOption,
+    SelectImageWrapper,
+    OptionImage,
+    DescriptionWrapper,
+    UpText,
+    BottomText,
+    ArrowImageWrapper,
+    ArrowImage,
+    ExplanationText
 } from './styles'
 
 // React Apollo
@@ -26,20 +40,38 @@ class ModeSelectorScreen extends PureComponent {
 
     return (
       <Wrapper>
-        <View key="logoRow" style={Styles.promptRow}>
-          <Animatable.Image source={Images.barcodeBlack} animation="fadeIn" />
-          <Animatable.Text style={Styles.prompt} animation="fadeIn">
-            Welcome to the Digitization App
-          </Animatable.Text>
-          <Animatable.Text style={Styles.prompt} animation="fadeIn">
-            The Pinto Digitization 
-          </Animatable.Text>
-          <Animatable.Text style={Styles.prompt} animation="fadeIn">
-            Which best describes you?
-          </Animatable.Text>
-        </View>
-
-        <Text style={Styles.inputTitle}>You'll be able to change this later</Text>
+        <ImageWrapper>
+          <BarcodeImage source={Images.barcodeBlack} />
+        </ImageWrapper>
+        <WelcomeTextWrapper>
+          <WelcomeText>Welcome to the Digitization App</WelcomeText>
+        </WelcomeTextWrapper>
+        <SelectText>Which best describes you?</SelectText>
+        <SelectOption>
+          <SelectImageWrapper width={39} height={32}>
+            <OptionImage source={Images.camera} />
+          </SelectImageWrapper>
+          <DescriptionWrapper>
+            <UpText>I’m Taking Photos</UpText>
+            <BottomText>Enter Photo Mode</BottomText>
+          </DescriptionWrapper>
+          <ArrowImageWrapper>
+            <ArrowImage source={Images.arrowRight} />
+          </ArrowImageWrapper>
+        </SelectOption>
+        <SelectOption>
+          <SelectImageWrapper width={35} height={48}>
+            <OptionImage source={Images.checkProduct} />
+          </SelectImageWrapper>
+          <DescriptionWrapper>
+            <UpText>I’m Pulling Products from Shelves</UpText>
+            <BottomText>Enter Runner Mode</BottomText>
+          </DescriptionWrapper>
+          <ArrowImageWrapper>
+            <ArrowImage source={Images.arrowRight} />
+          </ArrowImageWrapper>
+        </SelectOption>
+        <ExplanationText>You’ll be able to change this later</ExplanationText>
       </Wrapper>
     )
   }
@@ -57,63 +89,3 @@ const enhance = compose(
 )
 
 export default enhance(ModeSelectorScreen)
-
-import { StyleSheet } from 'react-native'
-
-const Styles = StyleSheet.create({
-  ...ApplicationStyles.screen,
-  root: {
-    flex: 1,
-    padding: Metrics.doubleBaseMargin,
-    paddingTop: Metrics.doubleBaseMargin + Metrics.statusBarHeight,
-    backgroundColor: Colors.primary
-  },
-  promptRow: {
-    paddingTop: Metrics.doubleBasePadding,
-    paddingBottom: Metrics.basePadding,
-    paddingHorizontal: Metrics.basePadding,
-    marginTop: 20,
-    alignSelf: 'flex-start'
-  },
-  prompt: {
-    ...Fonts.style.normal,
-    color: Colors.white
-  },
-  title: {
-    ...Fonts.style.bigHeading,
-    textAlign: 'center',
-    marginTop: Metrics.doubleBaseMargin,
-    marginBottom: Metrics.doubleBaseMargin * 2,
-    color: 'white'
-  },
-  inputTitle: {
-    color: 'white',
-    marginTop: Metrics.baseMargin,
-    marginLeft: Metrics.baseMargin,
-    fontWeight: 'bold'
-  },
-  link: {
-    color: 'white',
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-    marginTop: Metrics.doubleBaseMargin
-  },
-  button: {
-    borderWidth: 0,
-    marginVertical: Metrics.doubleBaseMargin
-  },
-  errorRow: {
-    width: Metrics.inputWidth,
-    padding: Metrics.basePadding,
-    backgroundColor: Colors.pink,
-    borderRadius: Metrics.baseBorderRadius,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  errorText: {
-    ...Fonts.style.small,
-    color: Colors.white,
-    width: 220,
-    marginLeft: Metrics.baseMargin
-  }
-})

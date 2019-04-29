@@ -112,7 +112,7 @@ class SettingsScreen extends ValidatedFormScreen {
         { text: 'Delete', onPress: resetAllTheData, style: 'destructive' },
         {
           text: 'Cancel',
-          onPress: () =>
+          onPress: () => {
             console.log('Cancel')
           }
         }
