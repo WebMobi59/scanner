@@ -2,18 +2,18 @@ import { StyleSheet } from 'react-native';
 import { Metrics, Fonts } from '@Themes';
 import * as scale from '../../Utils/Scale';
 
-export default StyleSheet.create({
+export  default StyleSheet.create({
     container: {
         position: 'relative',
         alignItems: 'center',
         height: Metrics.screenHeight
     },
     imageWrapper: {
-        width: 29 * scale.widthRatio,
+        width: 30 * scale.widthRatio,
         height: 28 * scale.widthRatio,
-        marginTop: 41 * scale.heightRatio
+        marginTop: 39 * scale.heightRatio
     },
-    barCode: {
+    store: {
         width: '100%',
         height: '100%'
     },
@@ -33,16 +33,17 @@ export default StyleSheet.create({
         textAlign: 'center'
     },
     selectText: {
+        width: 199 * scale.widthRatio,
         marginTop: 15 * scale.heightRatio,
         marginBottom: 34 * scale.heightRatio,
         color: '#1f2952',
         fontFamily: Fonts.type.base,
         fontWeight: '400',
-        fontSize: 16 * scale.widthRatio
+        fontSize: 16 * scale.widthRatio,
+        textAlign: 'center'
     },
     selectOption: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         width: 320 * scale.widthRatio,
         height: 106 * scale.heightRatio,
@@ -64,7 +65,6 @@ export default StyleSheet.create({
         height: '100%'
     },
     upText: {
-        width: 150 * scale.widthRatio,
         marginTop: 2 * scale.heightRatio,
         color: '#1f2952',
         fontFamily: Fonts.type.bold,
@@ -77,21 +77,50 @@ export default StyleSheet.create({
         fontSize: 12 * scale.widthRatio,
         fontWeight: '400'
     },
-    arrowImageWrapper: {
-        width: 7 * scale.widthRatio,
-        height: 14 * scale.widthRatio
-    },
-    arrow: {
-        width: '100%',
-        height: '100%'
-    },
-    explanationText: {
-        position: 'absolute',
+    placeholderText: {
+        opacity: 0.5,
         color: '#1f2952',
+        fontFamily: Fonts.type.bold,
+        fontSize: 16,
+        fontWeight: '700',
+    },
+    text: {
+        marginLeft: 27 * scale.widthRatio
+    },
+    finishButton: {
+        marginTop: 162 * scale.heightRatio,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 300 * scale.widthRatio,
+        height: 48 * scale.heightRatio,
+        borderRadius: 4 * scale.widthRatio,
+        backgroundColor: '#4a7ffb',
+    },
+    finishText: {
+        color: '#fbfbfc',
+        fontFamily: Fonts.type.bold,
+        fontSize: 18 * scale.widthRatio,
+        fontWeight: '700',
+    },
+    textGroup: {
+        position: 'absolute',
+        bottom: 53 * scale.heightRatio
+    },
+    text1: {
+        textAlign: 'center'
+    },
+    text2: {
+        textAlign: 'center',
+        color: '#00dc92',
         fontFamily: Fonts.type.base,
         fontSize: 12 * scale.widthRatio,
         fontWeight: '400',
         lineHeight: 20 * scale.heightRatio,
-        bottom: 73 * scale.heightRatio
+    },
+    underLine: {
+        height: 1 * scale.heightRatio,
+        borderColor: '#00dc92',
+        borderStyle: 'solid',
+        borderBottomWidth: 1 * scale.heightRatio
     }
 });

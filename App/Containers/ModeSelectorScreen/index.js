@@ -1,119 +1,75 @@
-import React, { PureComponent } from 'react'
-import { View, Text } from 'react-native'
-import { compose, withPropsOnChange } from 'recompose'
-import { get as _get } from 'lodash'
-import * as Animatable from 'react-native-animatable'
-import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '@Themes'
-
-import {
-    Wrapper
-} from './styles'
+import React, {Component} from 'react';
+import { TouchableOpacity } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import {compose, withPropsOnChange} from 'recompose';
+import {get as _get} from 'lodash';
+import {Metrics, Images, Colors, Fonts, ApplicationStyles} from '@Themes';
+import styles from './styles';
+import * as scale from '../../Utils/Scale';
 
 // React Apollo
-import { withAuth, withCreateAccount, withLogin } from '@GraphQL/Account/decorators'
+import {withAuth, withCreateAccount, withLogin} from '@GraphQL/Account/decorators'
 
-class ModeSelectorScreen extends PureComponent {
+class ModeSelectorScreen extends Component {
 
-  handleEnterPhotoMode = () => {
-    this.props.navigation.navigate('PartnerSelectorScreen', { transition: 'card' })
-  }
+    handleEnterPhotoMode = () => {
+        this.props.navigation.navigate('PartnerSelectorScreen', {transition: 'card'})
+    };
 
-  handleEnterRunnerMode = () => {
-    this.props.navigation.navigate('PartnerSelectorScreen', { transition: 'card' })
-  }
+    handleEnterRunnerMode = () => {
+        this.props.navigation.navigate('PartnerSelectorScreen', {transition: 'card'})
+    };
 
-  render() {
-
-    return (
-      <Wrapper>
-        <View key="logoRow" style={Styles.promptRow}>
-          <Animatable.Image source={Images.barcodeBlack} animation="fadeIn" />
-          <Animatable.Text style={Styles.prompt} animation="fadeIn">
-            Welcome to the Digitization App
-          </Animatable.Text>
-          <Animatable.Text style={Styles.prompt} animation="fadeIn">
-            The Pinto Digitization 
-          </Animatable.Text>
-          <Animatable.Text style={Styles.prompt} animation="fadeIn">
-            Which best describes you?
-          </Animatable.Text>
-        </View>
-
-        <Text style={Styles.inputTitle}>You'll be able to change this later</Text>
-      </Wrapper>
-    )
-  }
+    render() {
+        const { navigation } = this.props;
+        return (
+            <Animatable.View style={styles.container}>
+                <Animatable.View style={styles.imageWrapper}>
+                    <Animatable.Image source={Images.barcodeBlack} style={styles.barCode} animation="fadeIn" />
+                </Animatable.View>
+                <Animatable.View style={styles.welcomeTextWrapper}>
+                    <Animatable.Text style={styles.welcomeText}>Welcome to the Digitization App</Animatable.Text>
+                </Animatable.View>
+                <Animatable.Text style={styles.selectText}>Which best describes you?</Animatable.Text>
+                <TouchableOpacity style={styles.selectOption} onPress={() => navigation.navigate('StoreSelectorScreen')}>
+                    <Animatable.View style={[{width: 39 * scale.widthRatio, height: 32 * scale.heightRatio}]}>
+                        <Animatable.Image source={Images.camera} style={styles.option} animation="fadeIn" />
+                    </Animatable.View>
+                    <Animatable.View>
+                        <Animatable.Text style={styles.upText}>I’m Taking Photos</Animatable.Text>
+                        <Animatable.Text style={styles.bottomText}>Enter Photo Mode</Animatable.Text>
+                    </Animatable.View>
+                    <Animatable.View style={styles.arrowImageWrapper}>
+                        <Animatable.Image source={Images.arrowRight} style={styles.arrow} animation="fadeIn" />
+                    </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.selectOption} onPress={() => navigation.navigate('StoreSelectorScreen')}>
+                    <Animatable.View style={[{width: 35 * scale.widthRatio, height: 48 * scale.heightRatio}]}>
+                        <Animatable.Image source={Images.checkProduct} style={styles.option} animation="fadeIn" />
+                    </Animatable.View>
+                    <Animatable.View>
+                        <Animatable.Text style={styles.upText}>I’m Pulling Products from Shelves</Animatable.Text>
+                        <Animatable.Text style={styles.bottomText}>Enter Runner Mode</Animatable.Text>
+                    </Animatable.View>
+                    <Animatable.View style={styles.arrowImageWrapper}>
+                        <Animatable.Image source={Images.arrowRight} style={styles.arrow} animation="fadeIn" />
+                    </Animatable.View>
+                </TouchableOpacity>
+                <Animatable.Text style={styles.explanationText}>You’ll be able to change this later</Animatable.Text>
+            </Animatable.View>
+        )
+    }
 }
 
 const enhance = compose(
-  withAuth,
-  withPropsOnChange(
-    (props, nextProps) =>
-      _get(props, 'auth.session.isAuthenticated', false) !== _get(nextProps, 'auth.session.isAuthenticated', false),
-    ({ auth }) => ({ isAuthenticated: _get(auth, 'session.isAuthenticated', false) })
-  ),
-  withLogin,
-  withCreateAccount
-)
+    withAuth,
+    withPropsOnChange(
+        (props, nextProps) =>
+            _get(props, 'auth.session.isAuthenticated', false) !== _get(nextProps, 'auth.session.isAuthenticated', false),
+        ({auth}) => ({isAuthenticated: _get(auth, 'session.isAuthenticated', false)})
+    ),
+    withLogin,
+    withCreateAccount
+);
 
 export default enhance(ModeSelectorScreen)
-
-import { StyleSheet } from 'react-native'
-
-const Styles = StyleSheet.create({
-  ...ApplicationStyles.screen,
-  root: {
-    flex: 1,
-    padding: Metrics.doubleBaseMargin,
-    paddingTop: Metrics.doubleBaseMargin + Metrics.statusBarHeight,
-    backgroundColor: Colors.primary
-  },
-  promptRow: {
-    paddingTop: Metrics.doubleBasePadding,
-    paddingBottom: Metrics.basePadding,
-    paddingHorizontal: Metrics.basePadding,
-    marginTop: 20,
-    alignSelf: 'flex-start'
-  },
-  prompt: {
-    ...Fonts.style.normal,
-    color: Colors.white
-  },
-  title: {
-    ...Fonts.style.bigHeading,
-    textAlign: 'center',
-    marginTop: Metrics.doubleBaseMargin,
-    marginBottom: Metrics.doubleBaseMargin * 2,
-    color: 'white'
-  },
-  inputTitle: {
-    color: 'white',
-    marginTop: Metrics.baseMargin,
-    marginLeft: Metrics.baseMargin,
-    fontWeight: 'bold'
-  },
-  link: {
-    color: 'white',
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-    marginTop: Metrics.doubleBaseMargin
-  },
-  button: {
-    borderWidth: 0,
-    marginVertical: Metrics.doubleBaseMargin
-  },
-  errorRow: {
-    width: Metrics.inputWidth,
-    padding: Metrics.basePadding,
-    backgroundColor: Colors.pink,
-    borderRadius: Metrics.baseBorderRadius,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  errorText: {
-    ...Fonts.style.small,
-    color: Colors.white,
-    width: 220,
-    marginLeft: Metrics.baseMargin
-  }
-})
