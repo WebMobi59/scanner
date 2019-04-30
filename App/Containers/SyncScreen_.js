@@ -15,7 +15,7 @@ import { makeVariations } from '../Utils/Styles'
 import PromiseUtil from '../Utils/PromiseUtil'
 import { notifyAndLogError } from '../Lib/bugsnag'
 
-class SyncScreen extends PureComponent {
+class SyncScreen_ extends PureComponent {
   static propTypes = {
     data: PropTypes.shape({
       diff: PropTypes.shape({
@@ -160,7 +160,7 @@ class SyncScreen extends PureComponent {
   }
 }
 
-export default compose(withData)(SyncScreen)
+export default compose(withData)(SyncScreen_)
 
 import { StyleSheet } from 'react-native'
 import { Metrics, Colors, Fonts } from '../Themes'

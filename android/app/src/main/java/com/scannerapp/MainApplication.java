@@ -4,6 +4,18 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.apsl.versionnumber.RNVersionNumberPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.horcrux.svg.SvgPackage;
+import com.reactcommunity.rnlocalize.RNLocalizePackage;
+import com.corbt.keepawake.KCKeepAwakePackage;
+import com.rnfs.RNFSPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.psykar.cookiemanager.CookieManagerPackage;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import org.reactnative.camera.RNCameraPackage;
+import com.bugsnag.BugsnagReactNative;
+import com.apsl.versionnumber.RNVersionNumberPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -35,6 +47,18 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNVersionNumberPackage(),
+            new VectorIconsPackage(),
+            new SvgPackage(),
+            new RNLocalizePackage(),
+            new KCKeepAwakePackage(),
+            new RNFSPackage(),
+            new RNFetchBlobPackage(),
+            new RNDeviceInfo(),
+            new CookieManagerPackage(),
+            new ReactNativeConfigPackage(),
+            new RNCameraPackage(),
+            BugsnagReactNative.getPackage(),
             new RNVersionNumberPackage(),
             new RNCameraPackage(),
             new RNLocalizePackage(),

@@ -55,6 +55,7 @@
 		DF74E719560E40E4837D0F5C /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5215BD62BFA4156BFAB0174 /* Octicons.ttf */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		F152BCD6106541E9B8FECC76 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EECEEEE6F181457487376AF0 /* MaterialIcons.ttf */; };
+		F6E821DA2277FA1E00A98FA5 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 035CDB042224E72B005193FA /* libRNSVG.a */; };
 		FC62055437EF4555870D18A2 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C89E5AB029A4E8A97EF4D19 /* SimpleLineIcons.ttf */; };
 /* End PBXBuildFile section */
 
@@ -544,6 +545,7 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				31A61DE0195F4F5D8CE1FC40 /* libz.tbd in Frameworks */,
+				F6E821DA2277FA1E00A98FA5 /* libRNSVG.a in Frameworks */,
 				244363C0722D4DE2870789F4 /* libRNCamera.a in Frameworks */,
 				1DB1AF0E08A44B368FC1E362 /* libRNVersionNumber.a in Frameworks */,
 			);
@@ -965,6 +967,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
