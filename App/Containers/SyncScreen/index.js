@@ -5,8 +5,8 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import {compose, withPropsOnChange} from 'recompose';
 import {get as _get} from 'lodash';
 import {Metrics, Images, Colors, Fonts, ApplicationStyles} from '@Themes';
+import { CustomHeader } from '../../Components/CustomHeader';
 import styles from './styles';
-import * as scale from '../../Utils/Scale';
 
 // React Apollo
 import {withAuth, withCreateAccount, withLogin} from '@GraphQL/Account/decorators';
@@ -29,12 +29,7 @@ class SyncScreen extends Component {
     render() {
         return (
             <Animatable.View style={styles.container}>
-                <Animatable.View style={styles.title}>
-                    <Animatable.Text style={styles.titleText}>Manual Synch</Animatable.Text>
-                    <TouchableOpacity style={styles.closeImageWrapper}>
-                        <Animatable.Image source={Images.closeBlack} style={styles.close} />
-                    </TouchableOpacity>
-                </Animatable.View>
+                <CustomHeader title={'Manual Synch'} />
                 <Animatable.View style={styles.progressCircle}>
                     <AnimatedCircularProgress
                         size={240}
