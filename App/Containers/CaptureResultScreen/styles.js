@@ -81,7 +81,6 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     tabTitle: {
-        // color: '#232f5b',
         fontFamily: Fonts.type.bold,
         fontSize: 10 * scale.widthRatio,
         fontWeight: '700',
@@ -91,5 +90,64 @@ export default StyleSheet.create({
         width: '100%',
         height: 2,
         bottom: 0
+    },
+    tabView: {
+        width: scale.deviceWidth
+    },
+    syncRowContainer: {
+        paddingHorizontal: 15 * scale.widthRatio,
+        paddingVertical: 17 * scale.heightRatio,
+        borderColor: '#ededed',
+        borderStyle: 'solid',
+        borderBottomWidth: 1,
+    },
+    syncRowUp: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    syncDetail: {
+
+    },
+    syncId: {
+        marginBottom: scale.heightRatio,
+        color: '#1f2952',
+        fontFamily: Fonts.type.bold,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '600',
+        letterSpacing: -0.1 * scale.widthRatio,
+    },
+    syncName: {
+        opacity: 0.5,
+        color: '#1f2952',
+        fontFamily: Fonts.type.base,
+        fontSize: 12 * scale.widthRatio,
+        fontWeight: '400',
+        letterSpacing: -0.09 * scale.widthRatio,
+    },
+    errorText: {
+
+    },
+    syncStatus: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 80 * scale.widthRatio,
+        height: 18 * scale.heightRatio,
+        borderRadius: 9 * scale.heightRatio,
+    },
+    syncStatusText: {
+        color: '#ffffff',
+        fontFamily: Fonts.type.bold,
+        fontSize: 10 * scale.widthRatio,
+        fontWeight: '600',
+        letterSpacing: -0.36 * scale.widthRatio,
+    },
+    syncRowDown: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    syncFailedImage: {
+        width: 48 * scale.widthRatio,
+        height: 49 * scale.widthRatio
     }
 });

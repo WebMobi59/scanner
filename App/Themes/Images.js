@@ -45,7 +45,13 @@ const images = {
     delete: require('../Images/delete.png'),
     logout: require('../Images/logout.png'),
     warning: require('../Images/warning_icon.png'),
-    pending: require('../Images/pending_icon.png')
-}
+    pending: require('../Images/pending_icon.png'),
+    sync_failed_1: require('../Images/sync_failed_1.png'),
+    sync_failed_2: require('../Images/sync_failed_2.png'),
+    sync_failed_3: require('../Images/sync_failed_3.png'),
+    sync_failed_4: require('../Images/sync_failed_4.png'),
+    sync_failed_5: require('../Images/sync_failed_5.png'),
+    sync_failed_6: require('../Images/sync_failed_6.png')
+};
 
 export default images
