@@ -130,6 +130,8 @@ class SettingsScreen extends ValidatedFormScreen {
 
     handleSyncScreen = () => this.props.navigation.navigate('SyncScreen', {transition: 'card'});
 
+    handleCaptureResultScreen = () => this.props.navigation.navigate('CaptureResultScreen', {transition: 'card'});
+
     render() {
         const {data, tag, setTag, autoQuickSync, setAutoQuickSync, auth, prStores, prUserUpdate} = this.props
         const {loading} = this.state
@@ -244,12 +246,12 @@ class SettingsScreen extends ValidatedFormScreen {
                         </View>
                         <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
                         <View>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={this.handleCaptureResultScreen}>
                                 <View style={{width: '80%'}}>
                                     <Text style={{color: 'rgb(30,38,82)', fontSize: 16}}>Session Capture Status</Text>
                                 </View>
                                 <Image source={Images.arrowRight} sty={{width: 18, height: 18}}/>
-                            </View>
+                            </TouchableOpacity>
                             <Text style={{color: '#999', fontSize: 14}}>125 Captured; 68 Synched; 57 Pending
                                 Synch</Text>
 

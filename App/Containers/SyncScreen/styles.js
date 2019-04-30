@@ -7,10 +7,6 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center'
     },
-    close: {
-      width: '100%',
-      height: '100%'
-    },
     title: {
         position: 'relative',
         width: '100%',
@@ -32,6 +28,10 @@ export default StyleSheet.create({
         width: 24 * scale.widthRatio,
         height: 24 * scale.widthRatio,
         right: 24 * scale.widthRatio
+    },
+    close: {
+        width: '100%',
+        height: '100%'
     },
     progressCircle: {
         marginTop: 60 * scale.heightRatio

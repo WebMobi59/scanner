@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import styles from './Styles/CustomNavBarStyles';
-import * as scale from '../Utils/Scale';
+import styles from './styles';
+import * as scale from '../../Utils/Scale';
 
-export default class CustomNavBar extends Component {
+export default class Index extends Component {
     render() {
         const {onPress, title, baseScreen} = this.props;
         return (

@@ -44,6 +44,8 @@ const images = {
     sms: require('../Images/sms.png'),
     delete: require('../Images/delete.png'),
     logout: require('../Images/logout.png'),
+    warning: require('../Images/warning_icon.png'),
+    pending: require('../Images/pending_icon.png')
 }
 
 export default images
