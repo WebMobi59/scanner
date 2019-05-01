@@ -15,13 +15,31 @@ class CaptureResultScreen extends Component {
         this.state = {
             index: 0,
             routes: [
-                {key: 'errors', title: 'ERRORS'},
-                {key: 'captured', title: 'CAPTURED'},
-                {key: 'synched', title: 'SYNCHED'},
-                {key: 'pending', title: 'PENDING'}
+                {key: 'errors', title: this.renderTitle('errors')},
+                {key: 'captured', title: this.renderTitle('captured')},
+                {key: 'synched', title: this.renderTitle('synched')},
+                {key: 'pending', title: this.renderTitle('pending')}
             ]
         };
     }
+
+    renderTitle = (tab) => {
+      switch (tab) {
+          case 'errors':
+              const errorNum = capturedData.filter(captureRow => captureRow.syncStatus === 'synch failed').length;
+              return `ERRORS (${errorNum})`;
+          case 'captured':
+              return `CAPTURED (${capturedData.length})`;
+          case 'synched':
+              const syncedNum = capturedData.filter(captureRow => captureRow.syncStatus === 'synched').length;
+              return `SYNCHED (${syncedNum})`;
+          case 'pending':
+              const pendingNum = capturedData.filter(captureRow => captureRow.syncStatus === 'pending synch').length;
+              return `PENDING (${pendingNum})`;
+          default:
+              return `CAPTURED (${capturedData.length})`;
+      }
+    };
 
     renderSyncStatus = (syncRow, i) => {
         return (
@@ -32,17 +50,17 @@ class CaptureResultScreen extends Component {
                         <Animatable.Text style={styles.syncName}>
                             { syncRow.syncName };{ syncRow.date }
                         </Animatable.Text>
-                        {/*{*/}
-                        {/*    syncRow.syncStatus === 'synch failed' &&*/}
-                        {/*    <Animatable.Text style={styles.errorText}>*/}
-                        {/*        Some status message that we can give the user.*/}
-                        {/*    </Animatable.Text>*/}
-                        {/*}*/}
                     </Animatable.View>
                     <Animatable.View style={[styles.syncStatus, { backgroundColor: this.getBackground(syncRow.syncStatus) }]}>
                         <Animatable.Text style={styles.syncStatusText}>{syncRow.syncStatus}</Animatable.Text>
                     </Animatable.View>
                 </Animatable.View>
+                {
+                    syncRow.syncStatus === 'synch failed' &&
+                    <Animatable.Text style={styles.errorText}>
+                        Some status message that we can give the user.
+                    </Animatable.Text>
+                }
                 <Animatable.View style={styles.syncRowDown}>
                     {
                         syncRow.images && syncRow.images.map((image, index) => {
@@ -73,7 +91,7 @@ class CaptureResultScreen extends Component {
                 return index === 0 &&
                     <ScrollView style={styles.tabView}>
                         {
-                            capturedData.map((row, i) => {
+                            capturedData.filter(captureRow => captureRow.syncStatus === 'synch failed').map((row, i) => {
                                 return this.renderSyncStatus(row, i);
                             })
                         }
@@ -91,7 +109,7 @@ class CaptureResultScreen extends Component {
                 return index === 2 &&
                     <ScrollView>
                         {
-                            capturedData.map((row, i) => {
+                            capturedData.filter(captureRow => captureRow.syncStatus === 'synched').map((row, i) => {
                                 return this.renderSyncStatus(row, i);
                             })
                         }
@@ -100,7 +118,7 @@ class CaptureResultScreen extends Component {
                 return index === 3 &&
                     <ScrollView>
                         {
-                            capturedData.map((row, i) => {
+                            capturedData.filter(captureRow => captureRow.syncStatus === 'pending synch').map((row, i) => {
                                 return this.renderSyncStatus(row, i);
                             })
                         }

@@ -125,9 +125,6 @@ export default StyleSheet.create({
         fontWeight: '400',
         letterSpacing: -0.09 * scale.widthRatio,
     },
-    errorText: {
-
-    },
     syncStatus: {
         justifyContent: 'center',
         alignItems: 'center',
@@ -142,9 +139,18 @@ export default StyleSheet.create({
         fontWeight: '600',
         letterSpacing: -0.36 * scale.widthRatio,
     },
+    errorText: {
+        color: '#f54370',
+        fontFamily: Fonts.type.bold,
+        fontSize: 10 * scale.widthRatio,
+        fontWeight: '600',
+        letterSpacing: -0.36 * scale.widthRatio,
+        lineHeight: 16 * scale.heightRatio,
+    },
     syncRowDown: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginTop: 10 * scale.heightRatio
     },
     syncFailedImage: {
         width: 48 * scale.widthRatio,
