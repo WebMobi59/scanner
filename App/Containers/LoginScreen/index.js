@@ -232,7 +232,7 @@ class Index extends ValidatedFormScreen {
     };
 
     render() {
-        const {loading} = this.state
+        const {loading} = this.state;
 
         return (
             <View style={{height: this.state.visibleHeight, backgroundColor: Colors.primary}}>

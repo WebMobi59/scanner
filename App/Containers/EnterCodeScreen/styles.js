@@ -1,42 +1,58 @@
 import { StyleSheet } from 'react-native';
 import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '@Themes';
+import * as scale from '../../Utils/Scale';
 
 export default StyleSheet.create({
     container: {
         flex: 1,
-        padding: Metrics.doubleBaseMargin,
-        paddingTop: Metrics.doubleBaseMargin + Metrics.statusBarHeight,
         backgroundColor: Colors.primary
     },
     promptRow: {
-        paddingTop: Metrics.doubleBasePadding,
-        paddingBottom: Metrics.basePadding,
-        paddingHorizontal: Metrics.basePadding,
-        marginTop: 20,
-        alignSelf: 'flex-start'
+        marginTop: 39 * scale.heightRatio,
+        marginBottom: 97 * scale.heightRatio
     },
     prompt: {
         ...Fonts.style.normal,
-        color: Colors.white
+        marginTop: 12 * scale.heightRatio,
+        alignSelf: 'center',
+        width: 180 * scale.widthRatio,
+        color: Colors.white,
+        textAlign: 'center',
+        fontFamily: Fonts.type.bold,
+        fontSize: 16 * scale.widthRatio,
+        fontWeight: '400'
+    },
+    promptTitle: {
+        marginTop: 13 * scale.heightRatio,
+        color: Colors.white,
+        fontFamily: Fonts.type.bold,
+        fontSize: 24 * scale.widthRatio,
+        fontWeight: '700',
+        letterSpacing: -0.7 * scale.widthRatio,
+        textAlign: 'center'
     },
     title: {
         ...Fonts.style.bigHeading,
         textAlign: 'center',
         marginTop: Metrics.doubleBaseMargin,
         marginBottom: Metrics.doubleBaseMargin * 2,
-        color: 'white'
+        color: Colors.white,
     },
     inputTitle: {
-        color: 'white',
+        alignSelf: 'flex-start',
+        color: Colors.white,
         marginTop: Metrics.baseMargin,
         marginLeft: Metrics.baseMargin,
         fontWeight: 'bold'
     },
     link: {
-        color: 'white',
+        color: Colors.white,
         textAlign: 'center',
-        textDecorationLine: 'underline',
-        marginTop: Metrics.doubleBaseMargin
+        marginTop: Metrics.doubleBaseMargin,
+        fontFamily: Fonts.type.bold,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '600',
+        textDecorationLine: 'underline'
     },
     button: {
         borderWidth: 0,
@@ -55,5 +71,37 @@ export default StyleSheet.create({
         color: Colors.white,
         width: 220,
         marginLeft: Metrics.baseMargin
+    },
+    lockImageWrapper: {
+        alignSelf: 'center',
+        width: 23 * scale.widthRatio,
+        height: 31 * scale.widthRatio
+    },
+    lock: {
+        width: '100%',
+        height: '100%'
+    },
+    form: {
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flexGrow: 1
+    },
+    buttonWrapper: {
+        marginTop: 108 * scale.heightRatio
+    },
+    inputQuestion: {
+        color: Colors.white,
+        fontFamily: Fonts.type.base,
+        fontSize: 12,
+        fontWeight: '400',
+        lineHeight: 20
+    },
+    requestLink: {
+        color: '#00dc92',
+        fontFamily: Fonts.type.regular,
+        fontSize: 12,
+        fontWeight: '400',
+        lineHeight: 20
     }
 });

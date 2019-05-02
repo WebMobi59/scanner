@@ -11,6 +11,7 @@ import Button from '@Components/Button';
 import ValidatedTextInput from '@Components/ValidatedTextInput';
 import {Metrics, Images} from '@Themes';
 import styles from './styles';
+import * as scale from '../../Utils/Scale';
 
 // React Apollo
 import {withAuth, withCreateAccount, withLogin} from '@GraphQL/Account/decorators';
@@ -130,67 +131,70 @@ class EnterCodeScreen extends Component {
                     this.scrollView = sv
                 }}
             >
-                <View key="logoRow" style={styles.promptRow}>
-                    <Animatable.Image source={Images.lock} animation="fadeIn"/>
-                    <Animatable.Text style={styles.prompt} animation="fadeIn">
-                        Enter Invite Code
-                    </Animatable.Text>
-                    <Animatable.Text style={styles.prompt} animation="fadeIn">
-                        The Pinto Digitization
-                    </Animatable.Text>
-                    <Animatable.Text style={styles.prompt} animation="fadeIn">
-                        App is Invite-only.
-                    </Animatable.Text>
-                </View>
-
-                {error ? (
-                    <View style={styles.errorRow}>
-                        <Text style={styles.errorText}>{error}</Text>
+                <View style={styles.form}>
+                    <View key="logoRow" style={styles.promptRow}>
+                        <Animatable.View style={styles.lockImageWrapper}>
+                            <Animatable.Image source={Images.lock} style={styles.lock} animation="fadeIn"/>
+                        </Animatable.View>
+                        <Animatable.Text style={styles.promptTitle} animation="fadeIn">
+                            Enter Invite Code
+                        </Animatable.Text>
+                        <Animatable.Text style={styles.prompt} animation="fadeIn">
+                            The Pinto Digitization App is Invite-only.
+                        </Animatable.Text>
                     </View>
-                ) : null}
 
-                <Text style={styles.inputTitle}>Invite Code</Text>
-                <ValidatedTextInput
-                    placeholder="Invite Code"
-                    name="Code"
-                    returnKeyType="next"
-                    index="code"
-                    ref="code"
-                    editable
-                    required
-                    value={code.value}
-                    onChange={(value, event, valid) => {
-                        this.setState({code: {...code, value, valid}})
-                    }}
-                    validationFn={inputValidators.requiredValidator}
-                    onFocus={this.handleFocusChange}
-                    onSubmitEditing={this.handleOnSubmitEditing.bind(null, 'email')}
-                    errorMessage="Required"
-                    inverted
-                />
+                    {error ? (
+                        <View style={styles.errorRow}>
+                            <Text style={styles.errorText}>{error}</Text>
+                        </View>
+                    ) : null}
 
-                <Button
-                    loading={loading}
-                    onPress={this.handleSubmit}
-                    text="Submit Code"
-                    inverted
-                    style={styles.button}
-                    disabled={!this.isValid()}
-                />
+                    <Text style={styles.inputTitle}>Invite Code</Text>
+                    <ValidatedTextInput
+                        placeholder="Invite Code"
+                        name="Code"
+                        returnKeyType="next"
+                        index="code"
+                        ref="code"
+                        editable
+                        required
+                        value={code.value}
+                        onChange={(value, event, valid) => {
+                            this.setState({code: {...code, value, valid}})
+                        }}
+                        validationFn={inputValidators.requiredValidator}
+                        onFocus={this.handleFocusChange}
+                        onSubmitEditing={this.handleOnSubmitEditing.bind(null, 'email')}
+                        errorMessage="Required"
+                        inverted
+                    />
 
-                <Text
-                    style={styles.link}
-                    onPress={() => this.props.navigation.navigate('LoginScreen', {transition: 'card'})}
-                >
-                    or log in
-                </Text>
-                <Text style={styles.inputTitle}>Don't have a code?</Text>
-                <Text
-                    style={styles.link}
-                    onPress={() => this.props.navigation.navigate('RequestCodeScreen', {transition: 'card'})}
-                >
-                    request code
-                </Text>
+                    <View style={styles.buttonWrapper}>
+                        <Button
+                            loading={loading}
+                            onPress={this.handleSubmit}
+                            text="Submit Code"
+                            inverted
+                            style={styles.button}
+                            disabled={!this.isValid()}
+                        />
+                    </View>
+
+                    <Text
+                        style={styles.link}
+                        onPress={() => this.props.navigation.navigate('LoginScreen', {transition: 'card'})}
+                    >
+                        or log in
+                    </Text>
+                    <Text style={[styles.inputQuestion, { marginTop: 29 * scale.heightRatio}]}>Don't have a code?</Text>
+                    <Text
+                        style={styles.requestLink}
+                        onPress={() => this.props.navigation.navigate('RequestCodeScreen', {transition: 'card'})}
+                    >
+                        request code
+                    </Text>
+                </View>
             </ScrollView>
         )
     }
