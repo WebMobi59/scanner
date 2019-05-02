@@ -229,7 +229,7 @@ class Index extends ValidatedFormScreen {
                 />
             </Animatable.View>
         ]
-    }
+    };
 
     render() {
         const {loading} = this.state

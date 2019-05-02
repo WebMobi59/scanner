@@ -48,19 +48,26 @@ const InputTextStyle = {
         borderColor: Colors.orange
     },
     errorContainer: (valid, hasValue, focused, validated, height = defaultHeight, inverted = false, invertedColor = Colors.white) => ([
-        baseStyle(height),
+        // baseStyle(height),
+        // {
+        //     height: defaultHeight + 2,
+        //     lineHeight: defaultHeight,
+        //     opacity: focused || (valid && hasValue) ? 0 : 1,
+        //     zIndex: focused || validated ? 1 : 3,
+        //     paddingLeft: inverted ? Metrics.halfBasePadding / 2 : Metrics.basePadding,
+        //     color: valid ? Colors.white : (inverted ? invertedColor : Colors.secondary),
+        //     borderWidth: inverted ? 0 : 1,
+        //     borderBottomWidth: 1,
+        //     borderColor: valid ? Colors.transparent : (inverted ? invertedColor : Colors.secondary),
+        //     textAlign: 'left',
+        //     width: Metrics.inputWidth
+        // }
         {
-            height: defaultHeight + 2,
-            lineHeight: defaultHeight,
-            opacity: focused || (valid && hasValue) ? 0 : 1,
-            zIndex: focused || validated ? 1 : 3,
-            paddingLeft: inverted ? Metrics.halfBasePadding / 2 : Metrics.basePadding,
-            color: valid ? Colors.white : (inverted ? invertedColor : Colors.secondary),
-            borderWidth: inverted ? 0 : 1,
-            borderBottomWidth: 1,
-            borderColor: valid ? Colors.transparent : (inverted ? invertedColor : Colors.secondary),
-            textAlign: 'left',
-            width: Metrics.inputWidth
+            color: '#00dc92',
+            fontFamily: Fonts.type.bold,
+            fontSize: 12 * scale.widthRatio,
+            fontWeight: '600',
+            lineHeight: 20 * scale.heightRatio,
         }
     ]),
     required: (focused, valid, hasValue) => ({
