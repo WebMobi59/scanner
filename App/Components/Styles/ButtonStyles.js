@@ -1,7 +1,8 @@
-import { StyleSheet } from 'react-native'
-import { Fonts, Colors, Metrics } from '../../Themes/'
+import { StyleSheet } from 'react-native';
+import { Fonts, Colors, Metrics } from '../../Themes/';
+import * as scale from '../../Utils/Scale';
 
-export const activityIndicatorColor = Colors.white
+export const activityIndicatorColor = Colors.white;
 
 export default StyleSheet.create({
   button: {
@@ -9,7 +10,7 @@ export default StyleSheet.create({
     marginBottom: Metrics.baseMargin,
     backgroundColor: Colors.secondary,
     justifyContent: 'center',
-    borderRadius: Metrics.buttonHeight,
+    borderRadius: 4 * scale.widthRatio,
     paddingHorizontal: Metrics.basePadding,
     width: Metrics.buttonWidth
   },

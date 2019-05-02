@@ -15,7 +15,7 @@ export default class Button extends React.Component {
       ? Colors.primaryDark
       : this.props.dark
       ? Colors.white
-      : Colors.white
+      : Colors.white;
     return (
       <TouchableOpacity
         style={[

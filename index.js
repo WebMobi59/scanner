@@ -36,7 +36,7 @@ console.ignoredYellowBox = [
   'Warning: componentWillReceiveProps is deprecated',
   'Warning: componentWillUpdate is deprecated',
   '-[RNCamera updateFocusDepth]'
-]
+];
 
-console.disableYellowBox = true
-AppRegistry.registerComponent('ScannerApp', () => App)
+console.disableYellowBox = true;
+AppRegistry.registerComponent('ScannerApp', () => App);
