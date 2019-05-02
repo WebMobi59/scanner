@@ -16,10 +16,12 @@ export default StyleSheet.create({
         alignSelf: 'flex-start'
     },
     emailRow: {
-        paddingBottom: Metrics.basePadding
+        paddingBottom: Metrics.basePadding,
+        marginBottom: 10 * scale.heightRatio
     },
     passwordRow: {
-        paddingTop: 0
+        paddingTop: 0,
+        marginBottom: 10 * scale.heightRatio
     },
     prompt: {
         ...Fonts.style.normal,
