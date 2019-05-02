@@ -1,21 +1,21 @@
 import {createStackNavigator} from 'react-navigation'
 import LaunchScreen from '../Containers/LaunchScreen'
-import OnboardingScreenWrapper from '../Containers/OnboardingScreenWrapper'
-import LoginScreenWrapper from '../Containers/LoginScreenWrapper'
-import CreateAccountScreenWrapper from '../Containers/CreateAccountScreenWrapper'
-import EnterCodeScreenWrapper from '../Containers/EnterCodeScreenWrapper'
-import SettingsScreenWrapper from '../Containers/SettingsScreenWrapper'
-import ScannerScreenWrapper from '../Containers/ScannerScreenWrapper'
-import CameraScreenWrapper from '../Containers/CameraScreenWrapper'
-import ConfirmProductScreenWrapper from '../Containers/ConfirmProductScreenWrapper'
-import ConfirmProductPhotosScreenWrapper from '../Containers/ConfirmProductPhotosScreenWrapper'
-import NewProductScreenWrapper from '../Containers/NewProductScreenWrapper'
-import InfoScreenWrapper from '../Containers/InfoScreenWrapper'
-import ChecklistScreenWrapper from '../Containers/ChecklistScreenWrapper'
-import SyncScreenWrapper from '../Containers/SyncScreenWrapper'
-import ModeSelectorScreenWrapper from '../Containers/ModeSelectorScreenWrapper'
-import StoreSelectorScreenWrapper from '../Containers/StoreSelectorScreenWrapper'
-import PartnerSelectorScreenWrapper from '../Containers/PartnerSelectorScreenWrapper';
+import OnboardingScreenWrapper from '../Containers/OnboardingScreen/OnboardingScreenWrapper'
+import LoginScreenWrapper from '../Containers/LoginScreen/LoginScreenWrapper'
+import CreateAccountScreenWrapper from '../Containers/CreateAccountScreen/CreateAccountScreenWrapper'
+import EnterCodeScreenWrapper from '../Containers/EnterCodeScreen/EnterCodeScreenWrapper'
+import SettingsScreenWrapper from '../Containers/SettingsScreen/SettingsScreenWrapper'
+import ScannerScreenWrapper from '../Containers/SannerScreen/ScannerScreenWrapper'
+import CameraScreenWrapper from '../Containers/CameraScreen/CameraScreenWrapper'
+import ConfirmProductScreenWrapper from '../Containers/ConfirmProductScreen/ConfirmProductScreenWrapper'
+import ConfirmProductPhotosScreenWrapper from '../Containers/ConfirmProductPhotoScreen/ConfirmProductPhotosScreenWrapper'
+import NewProductScreenWrapper from '../Containers/NewProductScreen/NewProductScreenWrapper'
+import InfoScreenWrapper from '../Containers/InfoScreen/InfoScreenWrapper'
+import ChecklistScreenWrapper from '../Containers/ChecklistScreen/ChecklistScreenWrapper'
+import SyncScreenWrapper from '../Containers/SyncScreen/SyncScreenWrapper'
+import ModeSelectorScreenWrapper from '../Containers/ModeSelectorScreen/ModeSelectorScreenWrapper'
+import StoreSelectorScreenWrapper from '../Containers/StoreSelectorScreen/StoreSelectorScreenWrapper'
+import PartnerSelectorScreenWrapper from '../Containers/PartnerSelectorScreen/PartnerSelectorScreenWrapper';
 import CaptureResultScreenWrapper from '../Containers/CaptureResultScreen/CaptureResultScreenWrapper';
 
 import {Metrics, Colors} from '../Themes'
@@ -144,10 +144,7 @@ const AppNavigation = createStackNavigator(
             screen: OnboardingScreenWrapper,
             navigationOptions: {title: 'Onboarding', gesturesEnabled}
         },
-        LoginScreen: {
-            screen: LoginScreenWrapper,
-            navigationOptions: {title: 'Login', gesturesEnabled}
-        },
+        LoginScreen: { screen: LoginScreenWrapper, navigationOptions: { header: null } },
         EnterCodeScreen: {
             screen: EnterCodeScreenWrapper,
             navigationOptions: {title: 'EnterCode', gesturesEnabled}
