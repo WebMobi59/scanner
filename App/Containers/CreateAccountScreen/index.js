@@ -112,7 +112,7 @@ class CreateAccountScreen extends PureComponent {
                     email: email.value,
                     password: password.value
                 }));
-                this.props.navigation.navigate('PartnerSelectorScreen', {transition: 'card'})
+                this.props.navigation.navigate('ModeSelectorScreen', {transition: 'card'})
             }
         } catch (ex) {
             console.warn(ex)
