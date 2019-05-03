@@ -91,27 +91,8 @@ class EnterCodeScreen extends Component {
     };
 
     handleSubmit = async () => {
-        const {code} = this.state
-
-        //this.setState({ loading: true })
-        // try {
-        //   const { data, errors } = await this.props.createAccount({
-        //     variables: {
-        //       displayName: name.value,
-        //       email: email.value,
-        //       password: password.value
-        //     }
-        //   })
-        //   const error = _.get(errors, '0.message')
-        //   if (error) this.setState({ error })
-        //   else {
-        //     await AsyncStorage.setItem('credentials', JSON.stringify({ email: email.value, password: password.value }))
-        this.props.navigation.navigate('PartnerSelectorScreen', {transition: 'card'})
-        //   }
-        // } catch (ex) {
-        //   console.warn(ex)
-        // }
-        //this.setState({ loading: false })
+        const {code} = this.state;
+        this.props.navigation.navigate('CreateAccountScreen', {transition: 'card'});
     };
 
     render() {

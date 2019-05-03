@@ -1,27 +1,27 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import ReactNative, {View, ScrollView, Text, Keyboard, UIManager, AsyncStorage} from 'react-native'
-import {compose, withPropsOnChange} from 'recompose'
+import React from 'react';
+import PropTypes from 'prop-types';
+import ReactNative, {View, ScrollView, Text, Keyboard, UIManager, AsyncStorage} from 'react-native';
+import {compose, withPropsOnChange} from 'recompose';
 
-import {get as _get} from 'lodash'
-import * as Animatable from 'react-native-animatable'
-import _ from 'lodash'
+import {get as _get} from 'lodash';
+import * as Animatable from 'react-native-animatable';
+import _ from 'lodash';
 
-import * as inputValidators from '../../Lib/InputValidators'
-import {keyboardDidShow, keyboardDidHide} from '../../Lib/ComponentEventHandlers'
-import {Metrics, Images, Colors} from '../../Themes'
-import ValidatedFormScreen from '../ValidatedFormScreen'
-import Button from '../../Components/Button'
-import ValidatedTextInput from '../../Components/ValidatedTextInput'
+import * as inputValidators from '../../Lib/InputValidators';
+import {keyboardDidShow, keyboardDidHide} from '../../Lib/ComponentEventHandlers';
+import {Metrics, Images, Colors} from '../../Themes';
+import ValidatedFormScreen from '../ValidatedFormScreen';
+import Button from '../../Components/Button';
+import ValidatedTextInput from '../../Components/ValidatedTextInput';
 
 // React Apollo
-import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators'
+import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators';
 
 // Styles
-import styles from '../Styles/LoginScreenStyles'
+import styles from '../Styles/LoginScreenStyles';
 
-const FORGOT_PASSWORD_URL = 'https://pinto.co/forgot'
-const FORGOT_PASSWORD_TITLE = 'Forgot Password'
+const FORGOT_PASSWORD_URL = 'https://pinto.co/forgot';
+const FORGOT_PASSWORD_TITLE = 'Forgot Password';
 
 class Index extends ValidatedFormScreen {
     static propTypes = {
@@ -29,10 +29,10 @@ class Index extends ValidatedFormScreen {
         resettingApplicationData: PropTypes.bool,
         login: PropTypes.func.isRequired,
         createAccount: PropTypes.func.isRequired
-    }
+    };
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             // email: __DEV__ ? 'bot-photo-entry@sageproject.com' : null,
@@ -42,9 +42,9 @@ class Index extends ValidatedFormScreen {
             visibleHeight: Metrics.screenHeight,
             loading: false,
             isErrored: false
-        }
+        };
 
-        this.isLoggingIn = false
+        this.isLoggingIn = false;
         this.scrollY = 0
     }
 
@@ -52,28 +52,28 @@ class Index extends ValidatedFormScreen {
     }
 
     async componentWillMount() {
-        this.props.setApplicationData('currentWebViewSource', null)
-        this.props.setApplicationData('currentWebViewTitle', null)
-        if (this.navigateIfNeeded()) return
+        this.props.setApplicationData('currentWebViewSource', null);
+        this.props.setApplicationData('currentWebViewTitle', null);
+        if (this.navigateIfNeeded()) return;
         // Using keyboardWillShow/Hide looks 1,000 times better, but doesn't work on Android
         // TODO: Revisit this if Android begins to support - https://github.com/facebook/react-native/issues/3468
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow.bind(this))
-        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide.bind(this))
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow.bind(this));
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide.bind(this));
         this.keyboardDidHideScrollBackListener = Keyboard.addListener(
             'keyboardDidHide',
             this.handleKeyboardDidHideScrollBack
-        )
+        );
         try {
-            const {email, password} = JSON.parse(await AsyncStorage.getItem('credentials'))
+            const {email, password} = JSON.parse(await AsyncStorage.getItem('credentials'));
             this.setState({email, password})
         } catch (ex) {
         }
     }
 
     componentWillUnmount() {
-        this.keyboardDidShowListener.remove()
-        this.keyboardDidHideListener.remove()
-        this.keyboardDidHideScrollBackListener.remove()
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+        this.keyboardDidHideScrollBackListener.remove();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -81,9 +81,9 @@ class Index extends ValidatedFormScreen {
     }
 
     navigateIfNeeded({auth, navigation} = this.props) {
-        if (!navigation.isFocused()) return // react-stack-navigator does not unmount components...
+        if (!navigation.isFocused()) return;// react-stack-navigator does not unmount components...
         if (auth && !auth.loading && auth.session.isAuthenticated) {
-            console.log('@DMITRI: auth', auth)
+            console.log('@DMITRI: auth', auth);
             navigation.navigate(
                 _.get(auth, 'session.user.photoEntry.partner') && _.get(auth, 'session.user.photoEntry.store')
                     ? 'ScannerScreen'
@@ -93,7 +93,7 @@ class Index extends ValidatedFormScreen {
                 {
                     transition: 'card'
                 }
-            )
+            );
             return true
         }
 
@@ -101,8 +101,8 @@ class Index extends ValidatedFormScreen {
     }
 
     handlePressLogin = async () => {
-        const {email, password} = this.state
-        this.isLoggingIn = true
+        const {email, password} = this.state;
+        this.isLoggingIn = true;
         this.setState({loading: true}, async () => {
             try {
                 const {data, errors} = await this.props.login({
@@ -110,19 +110,19 @@ class Index extends ValidatedFormScreen {
                         email,
                         password
                     }
-                })
+                });
                 if (!data || !data.login) {
-                    console.warn('Login failed', errors)
-                    this.setState({loading: false, isErrored: true})
+                    console.warn('Login failed', errors);
+                    this.setState({loading: false, isErrored: true});
                     this.isLoggingIn = false
                 } else {
-                    this.setState({loading: false, isErrored: false})
-                    await AsyncStorage.setItem('credentials', JSON.stringify({email, password}))
+                    this.setState({loading: false, isErrored: false});
+                    await AsyncStorage.setItem('credentials', JSON.stringify({email, password}));
                     this.navigateIfNeeded()
                 }
             } catch (e) {
-                this.setState({loading: false, isErrored: true})
-                this.isLoggingIn = false
+                this.setState({loading: false, isErrored: true});
+                this.isLoggingIn = false;
                 this.props.handleReset(this.state)
             }
         })
@@ -132,14 +132,14 @@ class Index extends ValidatedFormScreen {
         if (typeof this.refs[nextField].handleFocusFromParent === 'function') {
             this.refs[nextField].handleFocusFromParent()
         }
-    }
+    };
 
     handleKeyboardDidHideScrollBack = () => {
         this.scrollView.scrollTo({
             y: 0,
             animated: true
         })
-    }
+    };
 
     handleFocusChange = (ref) => {
         const handle = ReactNative.findNodeHandle(this.refs[ref])
@@ -156,18 +156,18 @@ class Index extends ValidatedFormScreen {
                 })
             }
         )
-    }
+    };
 
     _handleResetPassword = () => {
-        this.props.setApplicationData('currentWebViewSource', FORGOT_PASSWORD_URL)
+        this.props.setApplicationData('currentWebViewSource', FORGOT_PASSWORD_URL);
         this.props.setApplicationData('currentWebViewTitle', FORGOT_PASSWORD_TITLE)
-    }
+    };
 
     renderInputs = () => {
-        const {settingApplicationData} = this.props
-        const {email, password} = this.state
-        const editable = !settingApplicationData
-        const errorMessage = 'Required'
+        const {settingApplicationData} = this.props;
+        const {email, password} = this.state;
+        const editable = !settingApplicationData;
+        const errorMessage = 'Required';
 
         return [
             <View key="logoRow" style={styles.promptRow}>
@@ -289,6 +289,6 @@ const enhance = compose(
     ),
     withLogin,
     withCreateAccount
-)
+);
 
 export default enhance(Index)

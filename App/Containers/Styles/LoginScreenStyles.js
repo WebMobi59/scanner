@@ -122,7 +122,9 @@ export default StyleSheet.create({
         textDecorationLine: 'underline'
     },
     termsOfWebView: {
-        marginTop: 72 * scale.heightRatio
+        width: 280 * scale.widthRatio,
+        marginTop: 29 * scale.heightRatio,
+        alignSelf: 'center'
     },
     termsText: {
         textAlign: 'center',
