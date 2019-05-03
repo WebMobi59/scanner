@@ -1,29 +1,31 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import {View, Text, Alert, ScrollView, SafeAreaView, TouchableOpacity, Image,} from 'react-native'
-import {compose, withPropsOnChange} from 'recompose'
-import {get as _get} from 'lodash'
-import * as Animatable from 'react-native-animatable'
-import {connect} from 'react-redux'
-import _ from 'lodash'
-import VersionNumber from 'react-native-version-number'
+import React from 'react';
+import PropTypes from 'prop-types';
+import {View, Text, Alert, ScrollView, TouchableOpacity, Image, StatusBar,} from 'react-native';
+import {compose, withPropsOnChange} from 'recompose';
+import {get as _get} from 'lodash';
+import * as Animatable from 'react-native-animatable';
+import {connect} from 'react-redux';
+import _ from 'lodash';
+import VersionNumber from 'react-native-version-number';
 
-import withApollo from '../../Decorators/withApollo'
-import toTitleCase from '../../Utils/toTitleCase'
-import {Metrics, Colors, Images} from '../../Themes'
-import ValidatedFormScreen from '../ValidatedFormScreen'
-import Button from '../../Components/Button'
-import CloseButton from '../../Components/CloseButton'
-import ApolloClient from '../../Lib/Apollo'
-import withData from '../../Decorators/withData'
-import SageActions from '../../Redux/SageRedux'
+import withApollo from '../../Decorators/withApollo';
+import toTitleCase from '../../Utils/toTitleCase';
+import {Metrics, Colors, Images} from '../../Themes';
+import ValidatedFormScreen from '../ValidatedFormScreen';
+import Button from '../../Components/Button';
+import CloseButton from '../../Components/CloseButton';
+import ApolloClient from '../../Lib/Apollo';
+import withData from '../../Decorators/withData';
+import SageActions from '../../Redux/SageRedux';
 import SegmentedControlTab from "react-native-segmented-control-tab";
 
 // React Apollo
-import {withAuth, withLogout} from '../../GraphQL/Account/decorators'
+import {withAuth, withLogout} from '../../GraphQL/Account/decorators';
 
-// Styles
-import Styles from '../Styles/SettingsScreenStyles'
+import { CustomHeader } from '../../Components/CustomHeader';
+
+import styles from './styles';
+import * as scale from '../../Utils/Scale';
 
 class Index extends ValidatedFormScreen {
     static propTypes = {
@@ -34,10 +36,10 @@ class Index extends ValidatedFormScreen {
         setTag: PropTypes.func.isRequired,
         setAutoQuickSync: PropTypes.func.isRequired,
         resetUserStats: PropTypes.func.isRequired
-    }
+    };
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             displayName: props.user.displayName,
@@ -46,7 +48,7 @@ class Index extends ValidatedFormScreen {
             loading: false,
             selectedIndex1: 0,
             selectedIndex2: 0
-        }
+        };
 
         this.scrollY = 0
     }
@@ -67,8 +69,8 @@ class Index extends ValidatedFormScreen {
     };
 
     componentWillReceiveProps(newProps) {
-        const {user: oldUser} = this.props
-        const {user: newUser} = newProps
+        const {user: oldUser} = this.props;
+        const {user: newUser} = newProps;
         if (newUser) {
             if (oldUser.displayName !== newUser.displayName) {
                 this.setState({displayName: newUser.displayName})
@@ -82,28 +84,28 @@ class Index extends ValidatedFormScreen {
     handlePressLogout = async () => {
         this.setState({loading: true}, async () => {
             try {
-                await this.props.logout()
-                ApolloClient.resetStore()
+                await this.props.logout();
+                ApolloClient.resetStore();
                 // this.setState({ loading: false })
-                this.props.handleReset(this.state)
+                this.props.handleReset(this.state);
                 this.props.resetNavigation()
             } catch (e) {
-                this.setState({loading: false})
-                this.props.handleReset(this.state)
+                this.setState({loading: false});
+                this.props.handleReset(this.state);
                 this.props.resetNavigation()
             }
         })
-    }
+    };
 
     handleLearnHowToUsePress = () => {
         this.props.navigation.navigate('OnboardingScreen', {fromAccount: true})
-    }
+    };
 
     handleResetAllTheData = () => {
         const resetAllTheData = () => {
-            this.props.data.removeAllData()
+            this.props.data.removeAllData();
             this.props.resetUserStats()
-        }
+        };
 
         Alert.alert(
             'Delete all data',
@@ -118,9 +120,9 @@ class Index extends ValidatedFormScreen {
                 }
             ]
         )
-    }
+    };
 
-    handleClose = () => this.props.navigation.goBack()
+    handleClose = () => this.props.navigation.goBack();
 
     handleSelectStore = () => this.props.navigation.navigate('StoreSelectorScreen', {transition: 'card'})
 
@@ -133,200 +135,124 @@ class Index extends ValidatedFormScreen {
     handleCaptureResultScreen = () => this.props.navigation.navigate('CaptureResultScreen', {transition: 'card'});
 
     render() {
-        const {data, tag, setTag, autoQuickSync, setAutoQuickSync, auth, prStores, prUserUpdate} = this.props
-        const {loading} = this.state
+        const {data, tag, setTag, autoQuickSync, setAutoQuickSync, auth, prStores, prUserUpdate} = this.props;
+        const {loading} = this.state;
 
+        StatusBar.setBarStyle('dark-content', true);
         return (
-            <View style={{flex: 1, backgroundColor: 'white'}}>
-                <SafeAreaView style={{flex: 1}}>
-                    <View style={{
-                        alignItems: 'flex-end',
-                        justifyContent: 'center',
-                        paddingHorizontal: 20,
-                        paddingTop: 20
-                    }}>
-                        <TouchableOpacity style={{}} onPress={this.handleClose}>
-                            <Image source={Images.closeBlack} style={{width: 24, height: 24}}/>
+            <View style={styles.container}>
+                <CustomHeader
+                    onClose={this.handleClose}
+                />
+                <ScrollView
+                    style={styles.innerContainer}
+                    contentContainerStyle={{}}
+                >
+                    <View style={styles.userInfo}>
+                        <Text style={styles.userName}>Hi, {auth.session.user.displayName}</Text>
+                        <Text style={styles.account}>Account</Text>
+                    </View>
+                    <View style={styles.modeSelect}>
+                        <Text style={styles.modeTitle}>{this.state.selectedIndex1 === 0 ? 'Photo' : 'Runner'} Mode</Text>
+                        <Text style={styles.modeDescription}>{this.state.selectedIndex1 === 0 ? 'Capturing photos of products' : 'Checking and pulling products'}</Text>
+                        <View style={styles.modeSelectTabContainer}>
+                            <SegmentedControlTab
+                                tabsContainerStyle={[styles.tabContainerStyle, { width: 228 * scale.widthRatio }]}
+                                values={["PHOTO MODE", "RUNNER MODE"]}
+                                selectedIndex={this.state.selectedIndex1}
+                                onTabPress={(index) => this.handleIndexChange(1, index)}
+                                activeTabStyle={styles.activeTabStyle}
+                                tabStyle={styles.tabStyle}
+                                activeTabTextStyle={styles.activeTabTextStyle}
+                                tabTextStyle={styles.tabTextStyle}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.storeSelect}>
+                        <View style={styles.storeTitle}>
+                            <Text style={styles.storeTitleText}>Store</Text>
+                            <Text style={styles.storeDescriptionText}>Kroger - Anderson Township</Text>
+                        </View>
+                        <TouchableOpacity onPress={this.handleSelectStore} style={styles.storeSelectMoveButton}>
+                            <Text style={styles.storeSelectMoveButtonText}>SELECT STORE</Text>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView
-                        style={{flex: 1, paddingHorizontal: 15}}
-                        contentContainerStyle={{}}
-                    >
-                        <View>
-                            <Text style={{
-                                color: '#999',
-                                fontSize: 18,
-                                textTransform: 'uppercase'
-                            }}>Hi, {auth.session.user.displayName}</Text>
-                            <Text style={{color: 'rgb(30,38,82)', fontSize: 28,}}>Account</Text>
+                    <View style={styles.getUpgrade}>
+                        <View style={styles.upgradeTitle}>
+                            <Text style={styles.upgradeTitleText}>App Version</Text>
+                            <Text style={styles.upgradeDescriptionText}>{`v${VersionNumber.appVersion} — Build ${VersionNumber.buildVersion}`}</Text>
                         </View>
-                        <View style={{marginTop: 35}}>
-                            <Text style={{
-                                color: 'rgb(30,38,82)',
-                                fontSize: 16
-                            }}>{this.state.selectedIndex1 == 0 ? 'Photo' : 'Runner'} Mode</Text>
-                            <Text style={{
-                                color: '#999',
-                                fontSize: 14
-                            }}>{this.state.selectedIndex1 == 0 ? 'Capturing photos of products' : 'Checking and pulling products'}</Text>
-                            <View style={{marginTop: 15}}>
-                                <SegmentedControlTab
-                                    tabsContainerStyle={{width: '80%', height: 36}}
-                                    values={["PHOTO MODE", "RUNNER MODE"]}
-                                    selectedIndex={this.state.selectedIndex1}
-                                    onTabPress={(index) => this.handleIndexChange(1, index)}
-                                    activeTabStyle={{
-                                        backgroundColor: 'rgb(68,113,250)',
-                                        borderColor: 'rgb(68,113,250)'
-                                    }}
-                                    tabStyle={{borderColor: 'rgb(68,113,250)'}}
-                                    activeTabTextStyle={{color: 'white', fontSize: 14}}
-                                    tabTextStyle={{color: 'rgb(68,113,250)', fontSize: 14}}
-                                />
-                            </View>
-                        </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                            <View style={{width: '60%'}}>
-                                <Text style={{color: 'rgb(30,38,82)', fontSize: 16}}>Store</Text>
-                                <Text style={{color: '#999', fontSize: 14}}>Kroger - Anderson Township</Text>
-                            </View>
-                            <TouchableOpacity onPress={this.handleSelectStore} style={{
-                                backgroundColor: 'rgb(68,113,250)',
-                                borderRadius: 3,
-                                paddingVertical: 10,
-                                width: '40%'
-                            }}>
-                                <Text style={{fontSize: 14, color: 'white', textAlign: 'center'}}>SELECT STORE</Text>
+                        {
+                            this.state.selectedIndex1 !== 0 &&
+                            <TouchableOpacity style={styles.upgradeMoveButton}>
+                                <Text style={styles.upgradeMoveButtonText}>GET UPGRADE</Text>
                             </TouchableOpacity>
+                        }
+                    </View>
+                    <View style={styles.productCaptureSelect}>
+                        <Text style={styles.productCaptureSelectTitle}>Product Capture Priority</Text>
+                        <Text style={styles.productCaptureSelectDescription}>
+                            {this.state.selectedIndex2 === 0 && 'Capturing products that must be done in this store'}
+                            {this.state.selectedIndex2 === 1 && 'Capturing high-priority products that are likely in this store'}
+                            {this.state.selectedIndex2 === 2 && 'Capturing any possible product that needs capture'}
+                        </Text>
+                        <View style={styles.productCaptureSelectTabContainer}>
+                            <SegmentedControlTab
+                                tabsContainerStyle={[styles.tabContainerStyle, { width: 342 * scale.widthRatio }]}
+                                values={["STORE LIST", "HIGH PRIORITY", "ALL PRODUCTS"]}
+                                selectedIndex={this.state.selectedIndex2}
+                                onTabPress={(index) => this.handleIndexChange(2, index)}
+                                activeTabStyle={styles.activeTabStyle}
+                                tabStyle={styles.tabStyle}
+                                activeTabTextStyle={styles.activeTabTextStyle}
+                                tabTextStyle={styles.tabTextStyle}
+                            />
                         </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                            <View style={{width: '60%'}}>
-                                <Text style={{color: 'rgb(30,38,82)', fontSize: 16}}>App Version</Text>
-                                <Text style={{
-                                    color: '#999',
-                                    fontSize: 14
-                                }}>{`v${VersionNumber.appVersion} — Build ${VersionNumber.buildVersion}`}</Text>
+                    </View>
+                    <View style={styles.sessionCaptureStatus}>
+                        <TouchableOpacity style={styles.sessionCaptureMoveDetailButton} onPress={this.handleCaptureResultScreen}>
+                            <View style={styles.sessionCaptureMoveDetailButtonTextContainer}>
+                                <Text style={styles.sessionCaptureMoveDetailButtonText}>Session Capture Status</Text>
                             </View>
-                            <TouchableOpacity style={{
-                                backgroundColor: 'rgb(68,113,250)',
-                                borderRadius: 3,
-                                paddingVertical: 10,
-                                width: '40%'
-                            }}>
-                                <Text style={{fontSize: 14, color: 'white', textAlign: 'center'}}>GET UPGRADE</Text>
-                            </TouchableOpacity>
+                            <Image source={Images.arrowRight} style={styles.arrowIcon}/>
+                        </TouchableOpacity>
+                        <Text style={styles.sessionCaptureDetail}>125 Captured; 68 Synched; 57 Pending Synch</Text>
+                        <View style={styles.barStyle}>
+                            <View style={styles.activeBarStyle} />
                         </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-
-                        <View>
-                            <Text style={{color: 'rgb(30,38,82)', fontSize: 16}}>Product Capture Priority</Text>
-                            <Text style={{color: '#999', fontSize: 14}}>
-                                {this.state.selectedIndex2 == 0 && 'Capturing products that must be done in this store'}
-                                {this.state.selectedIndex2 == 1 && 'Capturing high-priority products that are likely in this store'}
-                                {this.state.selectedIndex2 == 2 && 'Capturing any possible product that needs capture'}
-                            </Text>
-                            <View style={{marginTop: 15}}>
-                                <SegmentedControlTab
-                                    tabsContainerStyle={{width: '100%', height: 36}}
-                                    values={["STORE LIST", "HIGH PRIORITY", "ALL PRODUCTS"]}
-                                    selectedIndex={this.state.selectedIndex2}
-                                    onTabPress={(index) => this.handleIndexChange(2, index)}
-                                    activeTabStyle={{
-                                        backgroundColor: 'rgb(68,113,250)',
-                                        borderColor: 'rgb(68,113,250)'
-                                    }}
-                                    tabStyle={{borderColor: 'rgb(68,113,250)', fontSize: 14}}
-                                    activeTabTextStyle={{color: 'white'}}
-                                    tabTextStyle={{color: 'rgb(68,113,250)', fontSize: 14}}
-                                />
-                            </View>
-                        </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <View>
-                            <TouchableOpacity style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}} onPress={this.handleCaptureResultScreen}>
-                                <View style={{width: '80%'}}>
-                                    <Text style={{color: 'rgb(30,38,82)', fontSize: 16}}>Session Capture Status</Text>
+                        <Text style={styles.statusDetail}>Synch Status: 57% synched to server</Text>
+                        <TouchableOpacity style={styles.manualSyncButton} onPress={this.handleSyncScreen}>
+                            <Text style={styles.manualSyncButtonText}>FORCE MANUAL SYNC</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.messageSection}>
+                        <View style={styles.messageStatus}>
+                            <View style={styles.messageStatusText}>
+                                <View style={styles.messageStatusTitleTextContainer}>
+                                    <Text style={styles.messageStatusTitleText}>Your Messages</Text>
                                 </View>
-                                <Image source={Images.arrowRight} sty={{width: 18, height: 18}}/>
-                            </TouchableOpacity>
-                            <Text style={{color: '#999', fontSize: 14}}>125 Captured; 68 Synched; 57 Pending
-                                Synch</Text>
-
-                            <View style={{
-                                width: '80%',
-                                height: 6,
-                                borderRadius: 3,
-                                backgroundColor: '#ccc',
-                                marginTop: 20
-                            }}>
-                                <View style={{
-                                    width: '45%',
-                                    height: 6,
-                                    borderRadius: 3,
-                                    backgroundColor: 'rgb(28,222,139)'
-                                }}></View>
+                                <Image source={Images.arrowRight} style={styles.arrowIcon}/>
                             </View>
-                            <Text style={{color: '#999', fontSize: 14, marginTop: 5}}>Synch Status: 57% synched to
-                                server</Text>
-                            <TouchableOpacity style={{
-                                backgroundColor: 'rgb(68,113,250)',
-                                borderRadius: 3,
-                                marginTop: 20,
-                                paddingVertical: 10,
-                                width: '60%'
-                            }} onPress={this.handleSyncScreen}>
-                                <Text style={{fontSize: 14, color: 'white', textAlign: 'center'}}>FORCE MANUAL
-                                    SYNC</Text>
-                            </TouchableOpacity>
+                            <Text style={styles.messageStatusDetail}>0 messages</Text>
                         </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <View>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                                <View style={{width: '80%'}}>
-                                    <Text style={{color: 'rgb(30,38,82)', fontSize: 16}}>Your Messages</Text>
-                                </View>
-                                <Image source={Images.arrowRight} sty={{width: 18, height: 18}}/>
-                            </View>
-                            <Text style={{color: '#999', fontSize: 14}}>0 messages</Text>
-                        </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <TouchableOpacity onPress={this.handleProductChecklist} style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center'
-                        }}>
-                            <Image source={Images.diary} style={{marginRight: 20}}/>
-                            <Text style={{color: 'rgb(68,113,250)', fontSize: 16}}>View Product Checklist</Text>
-                        </TouchableOpacity>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                            <Image source={Images.sms} style={{marginRight: 20}}/>
-                            <Text style={{color: 'rgb(68,113,250)', fontSize: 16}}>Message Support</Text>
-                        </View>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <TouchableOpacity onPress={this.handleResetAllTheData} style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center'
-                        }}>
-                            <Image source={Images.delete} style={{marginRight: 20}}/>
-                            <Text style={{color: 'rgb(241,50,104)', fontSize: 16}}>Reset All Data & Restart
-                                Session</Text>
-                        </TouchableOpacity>
-                        <View style={{height: 0.5, backgroundColor: '#ccc', width: '100%', marginVertical: 25}}></View>
-                        <TouchableOpacity onPress={this.handlePressLogout} style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center'
-                        }}>
-                            <Image source={Images.logout} style={{marginRight: 20}}/>
-                            <Text style={{color: 'rgb(241,50,104)', fontSize: 16}}>Log Out</Text>
-                        </TouchableOpacity>
-                    </ScrollView>
-                </SafeAreaView>
+                    </View>
+                    <TouchableOpacity onPress={this.handleProductChecklist} style={styles.buttonContainer}>
+                        <Image source={Images.diary} style={[styles.leftIcon, { width: 20 * scale.widthRatio, height: 20 * scale.widthRatio }]} />
+                        <Text style={[styles.rightText, { color: '#4a7ffb' }]}>View Product Checklist</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonContainer}>
+                        <Image source={Images.sms} style={[styles.leftIcon, { width: 20 * scale.widthRatio, height: 13 * scale.widthRatio }]} />
+                        <Text style={[styles.rightText, { color: '#4a7ffb' }]}>Message Support</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.handleResetAllTheData} style={styles.buttonContainer}>
+                        <Image source={Images.delete} style={[styles.leftIcon, { width: 17 * scale.widthRatio, height: 20 * scale.widthRatio }]} />
+                        <Text style={[styles.rightText, { color: '#f54370' }]}>Reset All Data & Restart Session</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.handlePressLogout} style={styles.buttonContainer}>
+                        <Image source={Images.logout} style={[styles.leftIcon, { width: 18 * scale.widthRatio, height: 18 * scale.widthRatio }]} />
+                        <Text style={[styles.rightText, { color: '#f54370' }]}>Log Out</Text>
+                    </TouchableOpacity>
+                </ScrollView>
             </View>
         )
     }
@@ -363,13 +289,13 @@ const enhance = compose(
     withLogout,
     withAuth,
     withApollo('query prStores')
-)
+);
 
 export default enhance(Index)
 
-const Info = ({label, value}) => (
-    <View style={Styles.info}>
-        <Text style={Styles.infoLabel}>{label}</Text>
-        <Text>{value}</Text>
-    </View>
-)
+// const Info = ({label, value}) => (
+//     <View style={styles.info}>
+//         <Text style={styles.infoLabel}>{label}</Text>
+//         <Text>{value}</Text>
+//     </View>
+// );
