@@ -12,54 +12,60 @@ import PropTypes from 'prop-types'
  * be included in the validation results object.
  */
 export default class ValidatedFormScreen extends React.Component {
-  state = {
-    validationResults: {},
-    validatedChildren: {}
-  }
+    constructor(props) {
+        super(props);
 
-  handleSubmit = () => {}
-
-  isValid = () => {
-    return Object.keys(this.state.validationResults)
-      .map((key) => {
-        const isValid = this.state.validationResults[key]
-        this.state.validatedChildren[key].setState({ isValid })
-        return isValid
-      })
-      .every((inputIsValid) => inputIsValid === true)
-  }
-
-  handleValidityChange = (childInput, inputIsValid) => {
-    // setState is passed a function here because setState is not synchronous
-    // we avoid clobbering the validationResults by forcing all updates to happen in series
-    this.setState((state) => {
-      return {
-        validatedChildren: {
-          ...state.validatedChildren,
-          ...{ [childInput.props.name]: childInput }
-        },
-        validationResults: {
-          ...state.validationResults,
-          ...{ [childInput.props.name]: inputIsValid }
+        this.state = {
+            validationResults: {},
+            validatedChildren: {}
         }
-      }
-    })
-  }
+    }
 
-  collectErrorMessages = () => {
-    return Object.keys(this.state.validationResults)
-      .map((key) => {
-        const isValid = this.state.validationResults[key]
-        if (isValid) {
-          return null
-        }
-        const { props } = this.state.validatedChildren[key]
-        const { errorMessage } = props
-        if (errorMessage) {
-          return errorMessage
-        }
-        return `[${props.name} is invalid but no error message is set]`
-      })
-      .filter((errorMessage) => errorMessage)
-  }
+
+    handleSubmit = () => {
+    };
+
+    isValid = () => {
+        return Object.keys(this.state.validationResults)
+            .map((key) => {
+                const isValid = this.state.validationResults[key];
+                this.state.validatedChildren[key].setState({isValid});
+                return isValid
+            })
+            .every((inputIsValid) => inputIsValid === true);
+    };
+
+    handleValidityChange = (childInput, inputIsValid) => {
+        // setState is passed a function here because setState is not synchronous
+        // we avoid clobbering the validationResults by forcing all updates to happen in series
+        this.setState((state) => {
+            return {
+                validatedChildren: {
+                    ...state.validatedChildren,
+                    ...{[childInput.props.name]: childInput}
+                },
+                validationResults: {
+                    ...state.validationResults,
+                    ...{[childInput.props.name]: inputIsValid}
+                }
+            }
+        })
+    };
+
+    collectErrorMessages = () => {
+        return Object.keys(this.state.validationResults)
+            .map((key) => {
+                const isValid = this.state.validationResults[key];
+                if (isValid) {
+                    return null
+                }
+                const {props} = this.state.validatedChildren[key];
+                const {errorMessage} = props;
+                if (errorMessage) {
+                    return errorMessage
+                }
+                return `[${props.name} is invalid but no error message is set]`
+            })
+            .filter((errorMessage) => errorMessage)
+    }
 }

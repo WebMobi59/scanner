@@ -1,12 +1,14 @@
 import {StyleSheet} from 'react-native';
-import {Colors, Metrics, ApplicationStyles, Fonts} from '../../Themes';
-import * as scale from '../../Utils/Scale';
+import {Metrics, Colors, Fonts, ApplicationStyles} from '../../Themes';
+import * as scale from "../../Utils/Scale";
 
 export default StyleSheet.create({
     ...ApplicationStyles.screen,
-    container: {
-        alignItems: 'center',
-        width: Metrics.screenWidth
+    root: {
+        flex: 1,
+        padding: Metrics.doubleBaseMargin,
+        paddingTop: Metrics.doubleBaseMargin + Metrics.statusBarHeight,
+        backgroundColor: Colors.primary
     },
     promptRow: {
         paddingTop: Metrics.doubleBasePadding,
@@ -15,8 +17,13 @@ export default StyleSheet.create({
         marginTop: 20,
         alignSelf: 'flex-start'
     },
-    emailRow: {
+    fullNamRow: {
         paddingBottom: Metrics.basePadding,
+        marginTop: 27 * scale.heightRatio,
+        marginBottom: 10 * scale.heightRatio
+    },
+    emailRow: {
+        paddingTop: 0,
         marginBottom: 10 * scale.heightRatio
     },
     passwordRow: {
@@ -36,59 +43,28 @@ export default StyleSheet.create({
         fontSize: 14 * scale.widthRatio,
         fontWeight: '600',
     },
-    textInput: {
-        height: Metrics.inputHeight,
-        color: Colors.black
-    },
-    textInputReadonly: {
-        height: Metrics.inputHeight,
-        color: Colors.gray
-    },
-    forgotPasswordRow: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: Metrics.doubleBasePadding,
-    },
-    requiredText: {
-        color: '#00dc92',
-        fontFamily: Fonts.type.bold,
-        fontSize: 12 * scale.widthRatio,
-        fontWeight: '600',
-        lineHeight: 20 * scale.heightRatio,
-    },
-    loginRow: {
-        paddingTop: Metrics.doubleBasePadding,
-        paddingBottom: Metrics.doubleBasePadding,
-        paddingHorizontal: Metrics.doubleBasePadding,
-        flexDirection: 'column',
-        justifyContent: 'center'
-    },
-    loginButtonWrapper: {
-        flex: 1
-    },
-    loginButton: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: Colors.darkGray,
-        backgroundColor: Colors.lightGray,
-        padding: Metrics.basePadding,
-        borderRadius: Metrics.baseBorderRadius
-    },
-    cancelButton: {
-        marginLeft: Metrics.baseMargin
-    },
-    loginText: {
+    title: {
+        ...Fonts.style.bigHeading,
         textAlign: 'center',
-        color: Colors.black
+        marginTop: Metrics.doubleBaseMargin,
+        marginBottom: Metrics.doubleBaseMargin * 2,
+        color: 'white'
     },
-    topLogo: {
-        alignSelf: 'center',
-        resizeMode: 'contain'
+    inputTitle: {
+        color: 'white',
+        marginTop: Metrics.baseMargin,
+        marginLeft: Metrics.baseMargin,
+        fontWeight: 'bold'
+    },
+    link: {
+        color: 'white',
+        textAlign: 'center',
+        textDecorationLine: 'underline',
+        marginTop: Metrics.doubleBaseMargin
     },
     button: {
         borderWidth: 0,
-        marginTop: Metrics.baseMargin
+        marginVertical: Metrics.doubleBaseMargin
     },
     errorRow: {
         width: Metrics.inputWidth,
@@ -98,28 +74,11 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    alert: {
-        width: 18,
-        height: 21
-    },
     errorText: {
         ...Fonts.style.small,
         color: Colors.white,
         width: 220,
         marginLeft: Metrics.baseMargin
-    },
-    link: {
-        color: 'white',
-        textAlign: 'center',
-        textDecorationLine: 'underline'
-    },
-    signUpLink: {
-        color: '#fbfbfc',
-        fontFamily: Fonts.type.bold,
-        fontSize: 14 * scale.widthRatio,
-        textAlign: 'center',
-        fontWeight: '600',
-        textDecorationLine: 'underline'
     },
     termsOfWebView: {
         width: 280 * scale.widthRatio,
@@ -142,4 +101,4 @@ export default StyleSheet.create({
         lineHeight: 20 * scale.heightRatio,
         textDecorationLine: 'underline'
     }
-})
+});

@@ -9,7 +9,7 @@
     "api:start": "kill -9 $(lsof -t -i:3030) || true && cd ../sage-api && DEBUG_MIDDLEWARE=true DISABLE_MONGO_ID_VALIDATOR=true npm start",
     "api:ngrok": "killall -9 ngrok || true && ngrok http -subdomain mincedmit 3030",
     "emu:open:android": "$(~/Library/Android/sdk/tools/emulator -avd Pixel_API_25 > /dev/null 2>&1) & sleep 20 && echo 'launched Pixel API 25 emulator'",
-    "app:run:ios": "react-native run-ios --simulator 'iPhone 7'",
+    "app:run:ios": "react-native run-ios --simulator='iPhone 7'",
     "app:run:android": "yarn emu:open:android && react-native run-android",
     "app:run:both": "yarn app:run:ios & yarn app:run:android",
     "lint": "echo '--- standard, yeah, disabled ---' || standard --verbose | snazzy",

@@ -153,7 +153,7 @@ export default class ValidatedTextInput extends React.Component {
                 this.props.errorStyle
               ]}
             >
-              {errorMessage}
+              {required && '*'} {errorMessage}
             </Text>
           </TouchableOpacity>
         )}
