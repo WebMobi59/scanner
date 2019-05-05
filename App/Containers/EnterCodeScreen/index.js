@@ -5,16 +5,16 @@ import {compose, withPropsOnChange} from 'recompose';
 import {get as _get} from 'lodash';
 import * as Animatable from 'react-native-animatable'
 
-import * as inputValidators from '@Lib/InputValidators';
-import {keyboardDidShow, keyboardDidHide} from '@Lib/ComponentEventHandlers';
-import Button from '@Components/Button';
-import ValidatedTextInput from '@Components/ValidatedTextInput';
-import {Metrics, Images} from '@Themes';
+import * as inputValidators from '../../Lib/InputValidators';
+import {keyboardDidShow, keyboardDidHide} from '../../Lib/ComponentEventHandlers';
+import Button from '../../Components/Button';
+import ValidatedTextInput from '../../Components/ValidatedTextInput';
+import {Metrics, Images} from '../../Themes';
 import styles from './styles';
 import * as scale from '../../Utils/Scale';
 
 // React Apollo
-import {withAuth, withCreateAccount, withLogin} from '@GraphQL/Account/decorators';
+import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators';
 
 class EnterCodeScreen extends Component {
     static propTypes = {

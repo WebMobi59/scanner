@@ -3,7 +3,7 @@ import {TouchableOpacity, ScrollView} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {CustomHeader} from '../../Components/CustomHeader';
-import {Images} from '@Themes';
+import {Images} from '../../Themes';
 import * as scale from '../../Utils/Scale';
 import styles from './styles';
 import {capturedData} from '../../Utils/StaticData';

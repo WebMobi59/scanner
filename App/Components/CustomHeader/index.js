@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Images } from '@Themes';
+import { Images } from '../../Themes';
 import styles from './styles';
 
 export const CustomHeader = ({ title, onClose }) => {

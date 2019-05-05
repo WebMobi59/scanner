@@ -158,7 +158,6 @@ export default {
     textAlign: 'center',
     width: 280,
     marginTop: Metrics.baseMargin,
-    textAlign: 'center',
     color: Colors.white
   },
   preview: {

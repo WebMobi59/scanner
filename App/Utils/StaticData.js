@@ -1,4 +1,4 @@
-import { Images } from '@Themes';
+import { Images } from '../Themes';
 
 export const capturedData = [
     {
