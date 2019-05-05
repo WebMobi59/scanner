@@ -3,12 +3,12 @@ import { TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {compose, withPropsOnChange} from 'recompose';
 import {get as _get} from 'lodash';
-import {Metrics, Images, Colors, Fonts, ApplicationStyles} from '@Themes';
+import {Metrics, Images, Colors, Fonts, ApplicationStyles} from '../../Themes';
 import styles from './styles';
 import * as scale from '../../Utils/Scale';
 
 // React Apollo
-import {withAuth, withCreateAccount, withLogin} from '@GraphQL/Account/decorators'
+import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators'
 
 class ModeSelectorScreen extends Component {
 

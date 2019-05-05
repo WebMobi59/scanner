@@ -9,7 +9,7 @@ import { CustomHeader } from '../../Components/CustomHeader';
 import styles from './styles';
 
 // React Apollo
-import {withAuth, withCreateAccount, withLogin} from '@GraphQL/Account/decorators';
+import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators';
 
 class SyncScreen extends Component {
     constructor() {

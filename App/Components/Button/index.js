@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, ActivityIndicator, TouchableOpacity, Text, Image} from 'react-native';
-import Styles from './Styles/ButtonStyles';
-import {Colors} from '../Themes/';
+import Styles from './styles';
+import {Colors} from '../../Themes/';
 
 export default class Button extends React.Component {
     getText() {

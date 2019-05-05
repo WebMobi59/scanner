@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '@Themes';
+import { Metrics, Images, Colors, Fonts, ApplicationStyles } from '../../Themes';
 import * as scale from '../../Utils/Scale';
 
 export default StyleSheet.create({
