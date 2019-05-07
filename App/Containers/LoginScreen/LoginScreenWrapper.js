@@ -38,11 +38,13 @@ class LoginScreenWrapper extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    currentDatum: state.application.currentDatum,
-    settingApplicationData: state.application.setting,
-    resettingApplicationData: state.application.resetting
-});
+const mapStateToProps = (state) => {
+    return {
+        currentDatum: state.application.currentDatum,
+        settingApplicationData: state.application.setting,
+        resettingApplicationData: state.application.resetting
+    }
+};
 
 const mapDispatchToProps = (dispatch) => ({
     setApplicationData: (key, value) => dispatch(ApplicationActions.applicationDataSetRequest(key, value)),

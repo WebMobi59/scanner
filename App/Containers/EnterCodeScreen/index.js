@@ -15,10 +15,13 @@ import * as scale from '../../Utils/Scale';
 
 // React Apollo
 import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators';
+import withApollo from '../../Decorators/withApollo'
+import gql from "graphql-tag";
 
 class EnterCodeScreen extends Component {
     static propTypes = {
-        createAccount: PropTypes.func.isRequired
+        createAccount: PropTypes.func.isRequired,
+        prCodeCreate: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -28,7 +31,8 @@ class EnterCodeScreen extends Component {
             visibleHeight: Metrics.screenHeight,
             code: {value: null, valid: false, error: null},
             loading: false,
-            error: null
+            error: null,
+            serverCode: ''
         };
 
         this.isLoggingIn = false;
@@ -50,6 +54,16 @@ class EnterCodeScreen extends Component {
         this.keyboardDidShowListener.remove()
         this.keyboardDidHideListener.remove()
         this.keyboardDidHideScrollBackListener.remove()
+    }
+
+    async componentDidMount() {
+        // const { partner } = this.state;
+        // const getCode = await this.props.prCodeCreate({ partner });
+        // AsyncStorage.getItem('getCodeCreate').then(getCodeCreate => {
+        //
+        // });
+        const { getCodeCreate } = JSON.parse(await AsyncStorage.getItem('getCodeCreate'));
+        this.setState({ serverCode: getCodeCreate });
     }
 
     isValid() {
@@ -78,8 +92,8 @@ class EnterCodeScreen extends Component {
                 console.error(e)
             },
             (x, y, w, h) => {
-                const {visibleHeight} = this.state
-                const bottom = y + h + 100
+                const {visibleHeight} = this.state;
+                const bottom = y + h + 100;
                 if (bottom > this.state.visibleHeight) {
                     this.scrollView.scrollTo({
                         y: bottom - this.state.visibleHeight,
@@ -91,15 +105,26 @@ class EnterCodeScreen extends Component {
     };
 
     handleSubmit = async () => {
-        const {code} = this.state;
-        this.props.navigation.navigate('CreateAccountScreen', {transition: 'card'});
+        const { code, serverCode } = this.state;
+        if (code.value === serverCode.code) {
+            let code = this.state.code;
+            code.valid = true;
+            code.error = null;
+            this.setState({ code}, () => {
+                this.props.navigation.navigate('ModeSelectorScreen', {transition: 'card'});
+            });
+        } else {
+            let code = this.state.code;
+            code.valid = false;
+            code.error = 'This code does not match with server code';
+            this.setState({ code })
+        }
     };
 
     render() {
         const {visibleHeight, code, loading, error} = this.state;
-
+        console.log('-- server code --', this.state.serverCode);
         StatusBar.setBarStyle('light-content', true);
-
         return (
             <ScrollView
                 style={styles.container}
@@ -189,7 +214,19 @@ const enhance = compose(
         ({auth}) => ({isAuthenticated: _get(auth, 'session.isAuthenticated', false)})
     ),
     withLogin,
-    withCreateAccount
+    withCreateAccount,
+    withApollo(
+        'mutation prCodeCreate',
+        { partner: 'String!' },
+        null,
+        null
+    ),
+    withApollo(
+        'mutation prCodeClaim',
+        { code: 'String' },
+        '... Session',
+        require('../../GraphQL/Account/fragments/session').default
+    )
 );
 
 export default enhance(EnterCodeScreen);

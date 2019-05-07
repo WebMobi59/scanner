@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { compose, withPropsOnChange } from 'recompose';
@@ -13,7 +14,8 @@ import styles from './styles';
 // import ValidatedTextInput from '../../Components/ValidatedTextInput'
 
 // React Apollo
-import { withAuth, withCreateAccount, withLogin } from '../../GraphQL/Account/decorators'
+import { withAuth, withCreateAccount, withLogin } from '../../GraphQL/Account/decorators';
+import withApollo from '../../Decorators/withApollo';
 import * as scale from '../../Utils/Scale';
 
 const items = [
@@ -44,13 +46,19 @@ const items = [
 ];
 
 class StoreSelectorScreen extends Component {
+    static propTypes = {
+        prStores: PropTypes.object.isRequired,
+        prUserUpdate: PropTypes.func.isRequired
+    };
+
     constructor(props) {
         super(props);
 
         this.state = {
             visibleHeight: Metrics.screenHeight,
             selectedStore: '',
-            selectedStoreLabel: ''
+            selectedStoreLabel: '',
+            loading: true
         };
     }
 
@@ -70,6 +78,7 @@ class StoreSelectorScreen extends Component {
 
     render() {
         const { selectedStore, selectedStoreLabel } = this.state;
+        const { prStores } = this.props;
 
         return (
             <Animatable.View style={styles.container}>
@@ -126,7 +135,14 @@ const enhance = compose(
         ({ auth }) => ({ isAuthenticated: _get(auth, 'session.isAuthenticated', false) })
     ),
     withLogin,
-    withCreateAccount
+    withCreateAccount,
+    withApollo('query prStores', null, null, null, { renderLoading: 'default', fetchPolicy: 'network-only' }),
+    withApollo(
+        'mutation prUserUpdate',
+        { store: 'String!' },
+        '... Session',
+        require('../../GraphQL/Account/fragments/session').default
+    )
 );
 
 export default enhance(StoreSelectorScreen);
