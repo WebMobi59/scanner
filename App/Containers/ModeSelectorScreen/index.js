@@ -31,7 +31,7 @@ class ModeSelectorScreen extends Component {
                     <Animatable.Text style={styles.welcomeText}>Welcome to the Digitization App</Animatable.Text>
                 </Animatable.View>
                 <Animatable.Text style={styles.selectText}>Which best describes you?</Animatable.Text>
-                <TouchableOpacity style={styles.selectOption} onPress={() => navigation.navigate('StoreSelectorScreen')}>
+                <TouchableOpacity style={styles.selectOption} onPress={() => navigation.navigate('PartnerSelectorScreen')}>
                     <Animatable.View style={[{width: 39 * scale.widthRatio, height: 32 * scale.heightRatio}]}>
                         <Animatable.Image source={Images.camera} style={styles.option} animation="fadeIn" />
                     </Animatable.View>

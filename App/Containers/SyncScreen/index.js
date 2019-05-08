@@ -60,7 +60,7 @@ class SyncScreen extends PureComponent {
             loading: true,
             progressTotal: (quickSync ? 0 : photosRemain) + productsRemain + outOfStockRemain,
             error: null
-        })
+        });
 
         let failCounter = 0;
         const maxFails = 5;

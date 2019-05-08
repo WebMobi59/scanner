@@ -43,7 +43,7 @@ class Index extends PureComponent {
 
   render() {
     const { prStores, prPartners, auth } = this.props
-    // console.log('prpartners', prPartners)
+    console.log('prpartners', prPartners)
     const current = _.get(auth, 'session.user.photoEntry.partner')
     return (
       <ScrollView style={Styles.root}>

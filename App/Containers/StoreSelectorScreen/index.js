@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native';
+import _ from 'lodash';
 import * as Animatable from 'react-native-animatable';
 import { compose, withPropsOnChange } from 'recompose';
 import { get as _get } from 'lodash';
@@ -79,6 +80,8 @@ class StoreSelectorScreen extends Component {
     render() {
         const { selectedStore, selectedStoreLabel } = this.state;
         const { prStores } = this.props;
+        const stores = _.get(prStores, 'result')
+        console.log('********', stores);
 
         return (
             <Animatable.View style={styles.container}>

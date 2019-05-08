@@ -12,7 +12,7 @@ import SageActions from '../Redux/SageRedux'
 import {notifyAndLogError} from '../Lib/bugsnag'
 import getEmptyUpcData from '../Utils/getEmptyUpcData'
 
-const DEFAULT_DATA_RESULT = {doneUPCs: [], upc: {}, date: new Date().toISOString()}
+const DEFAULT_DATA_RESULT = {doneUPCs: [], upc: {}, date: new Date().toISOString()};
 const APP_DIR = RNFS.DocumentDirectoryPath.split('/')
     .slice(0, -1)
     .join('/');
@@ -30,7 +30,7 @@ class _WithDataDecorator extends PureComponent {
             }).isRequired
         }).isRequired,
         incrementUserStat: PropTypes.func.isRequired
-    }
+    };
 
     state = {
         result: Storage.payload.data,
@@ -151,10 +151,10 @@ class _WithDataDecorator extends PureComponent {
                     ? {..._.pick(item, ['upc', 'outOfStock']), storeStatus: 'cart', toQuickSync: true}
                     : null
             )
-            .filter((item) => item)
+            .filter((item) => item);
 
         return this._syncUpcList(upcList, async (item) => {
-            if (item.toQuickSync) return this.updateUpc(item.upc, {isQuickSynced: true})
+            if (item.toQuickSync) return this.updateUpc(item.upc, {isQuickSynced: true});
             else return this.clearUpcOnSyncHandler(item)
         })
     }
@@ -174,7 +174,7 @@ class _WithDataDecorator extends PureComponent {
         try {
             await this._syncUpcList(_.cloneDeep(list), (item) =>
                 this.clearUpcOnSyncHandler({...item, isSafeToClearDiff: true, isSafeToRemovePhotos: true})
-            )
+            );
             return {ok: true, item: list[0]}
         } catch (error) {
             return {ok: false, error}
@@ -183,7 +183,7 @@ class _WithDataDecorator extends PureComponent {
 
     clearUpcOnSyncHandler = async (item) => {
         try {
-            if (item.isSafeToClearDiff) await Storage.clearUpc(item.upc)
+            if (item.isSafeToClearDiff) await Storage.clearUpc(item.upc);
             if (item.isSafeToRemovePhotos) {
                 await Promise.all(_.map(item.photos, (photo) => RNFS.unlink(photo.uri)))
             }
@@ -192,7 +192,7 @@ class _WithDataDecorator extends PureComponent {
             // log the error but carry on
             notifyAndLogError(ex)
         }
-    }
+    };
 
     async updateUpc(upc, diff) {
         const {incrementUserStat} = this.props;

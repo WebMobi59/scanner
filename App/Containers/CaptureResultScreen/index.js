@@ -1,12 +1,25 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, ScrollView} from 'react-native';
+import {TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native';
+import _ from 'lodash';
 import * as Animatable from 'react-native-animatable';
+import InfiniteScroll from 'react-native-infinite-scroll';
+import { compose } from 'recompose';
+import gql from 'graphql-tag';
+import { withAuth } from '../../GraphQL/Account/decorators';
+import {apolloClient} from '../../Lib/Apollo';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {CustomHeader} from '../../Components/CustomHeader';
 import {Images} from '../../Themes';
 import * as scale from '../../Utils/Scale';
 import styles from './styles';
-import {capturedData} from '../../Utils/StaticData';
+
+const BASE_DATA_PREFIX = '@pinto:prData'; // do not edit this, it will make all phones lose all progress
+
+const QUERY_PR_DATA = gql`
+  query prData($updatedDate: String) {
+    prData(updatedDate: $updatedDate)
+  }
+`;
 
 class CaptureResultScreen extends Component {
     constructor() {
@@ -15,48 +28,74 @@ class CaptureResultScreen extends Component {
         this.state = {
             index: 0,
             routes: [
-                {key: 'errors', title: this.renderTitle('errors')},
-                {key: 'captured', title: this.renderTitle('captured')},
-                {key: 'synched', title: this.renderTitle('synched')},
-                {key: 'pending', title: this.renderTitle('pending')}
-            ]
+                {key: 'errors', title: 'errors'},
+                {key: 'captured', title: 'captured'},
+                {key: 'synched', title: 'synched'},
+                {key: 'pending', title: 'pending'}
+            ],
+            loading: false,
+            captureData: null,
+            loadNum: 10
         };
     }
 
+    async componentDidMount({variables = {}} = {}) {
+        this.setState({ loading: true });
+        try {
+            const response = await apolloClient.query({
+                query: QUERY_PR_DATA,
+                variables,
+                fetchPolicy: 'no-cache'
+            });
+            const { prData } = response.data;
+            this.setState({ loading: false, captureData: prData && Object.values(prData.upc) });
+            if (response.errors) throw response.errors
+        } catch (ex) {
+            console.log(ex);
+            this.setState({ loading: false });
+        }
+    }
+
+    componentWillUnmount() {
+        this.setState({ loading: false });
+    }
+
     renderTitle = (tab) => {
-      switch (tab) {
-          case 'errors':
-              const errorNum = capturedData.filter(captureRow => captureRow.syncStatus === 'synch failed').length;
-              return `ERRORS (${errorNum})`;
-          case 'captured':
-              return `CAPTURED (${capturedData.length})`;
-          case 'synched':
-              const syncedNum = capturedData.filter(captureRow => captureRow.syncStatus === 'synched').length;
-              return `SYNCHED (${syncedNum})`;
-          case 'pending':
-              const pendingNum = capturedData.filter(captureRow => captureRow.syncStatus === 'pending synch').length;
-              return `PENDING (${pendingNum})`;
-          default:
-              return `CAPTURED (${capturedData.length})`;
-      }
+        const { captureData } = this.state;
+        switch (tab) {
+            case 'errors':
+                const errorNum = captureData !== null && captureData.filter(captureRow => captureRow.storeStatus === 'synch failed').length;
+                return `ERRORS (${errorNum})`;
+            case 'captured':
+                return `CAPTURED (${captureData !== null && captureData.length})`;
+            case 'synched':
+                const syncedNum = captureData !== null && captureData.filter(captureRow => captureRow.storeStatus === 'synched').length;
+                return `SYNCHED (${syncedNum})`;
+            case 'pending':
+                const pendingNum = captureData !== null && captureData.filter(captureRow => captureRow.storeStatus === 'pending').length;
+                return `PENDING (${pendingNum})`;
+            default:
+                return `CAPTURED (${captureData !== null && captureData.length})`;
+        }
     };
 
     renderSyncStatus = (syncRow, i) => {
+        console.log('--- upc ---', syncRow);
         return (
             <Animatable.View style={styles.syncRowContainer} key={i}>
                 <Animatable.View style={styles.syncRowUp}>
                     <Animatable.View style={styles.syncDetail}>
-                        <Animatable.Text style={styles.syncId}>{syncRow.id}</Animatable.Text>
+                        <Animatable.Text style={styles.syncId}>{syncRow.upc}</Animatable.Text>
                         <Animatable.Text style={styles.syncName}>
-                            { syncRow.syncName };{ syncRow.date }
+                            { syncRow.labelName }
                         </Animatable.Text>
                     </Animatable.View>
-                    <Animatable.View style={[styles.syncStatus, { backgroundColor: this.getBackground(syncRow.syncStatus) }]}>
-                        <Animatable.Text style={styles.syncStatusText}>{syncRow.syncStatus}</Animatable.Text>
+                    <Animatable.View style={[styles.syncStatus, { backgroundColor: this.getBackground(syncRow.storeStatus) }]}>
+                        <Animatable.Text style={styles.syncStatusText}>{syncRow.storeStatus}</Animatable.Text>
                     </Animatable.View>
                 </Animatable.View>
                 {
-                    syncRow.syncStatus === 'synch failed' &&
+                    syncRow.storeStatus === 'synch failed' &&
                     <Animatable.Text style={styles.errorText}>
                         Some status message that we can give the user.
                     </Animatable.Text>
@@ -73,7 +112,7 @@ class CaptureResultScreen extends Component {
     };
 
     getBackground = (status) => {
-        if (status === 'pending synch') {
+        if (status === 'pending') {
             return '#c7c9d4';
         } else if (status === 'synching') {
             return '#a65dfb';
@@ -85,53 +124,44 @@ class CaptureResultScreen extends Component {
     };
 
     _renderScene = ({route}) => {
-        const {index} = this.state;
+        const {index, captureData } = this.state;
         switch (route.key) {
             case 'errors':
-                return index === 0 &&
-                    <ScrollView style={styles.tabView}>
-                        {
-                            capturedData.filter(captureRow => captureRow.syncStatus === 'synch failed').map((row, i) => {
-                                return this.renderSyncStatus(row, i);
-                            })
-                        }
-                    </ScrollView>;
+                return index === 0 && this._renderTabComponent('synch failed');
             case 'captured':
                 return index === 1 &&
-                    <ScrollView>
-                        {
-                            capturedData.map((row, i) => {
-                                return this.renderSyncStatus(row, i);
-                            })
-                        }
-                    </ScrollView>;
+                    <InfiniteScroll
+                        horizontal={false}  //true - if you want in horizontal
+                        onLoadMoreAsync={this.loadMorePage}
+                        distanceFromEnd={10} // distance in density-independent pixels from the right end
+                        style={styles.scrollView}>
+                        <ScrollView>
+                            {
+                                captureData.slice(0, this.state.loadNum).map((row, i) => {
+                                    return this.renderSyncStatus(row, i);
+                                })
+                            }
+                        </ScrollView>
+                    </InfiniteScroll>;
             case 'synched':
-                return index === 2 &&
-                    <ScrollView>
-                        {
-                            capturedData.filter(captureRow => captureRow.syncStatus === 'synched').map((row, i) => {
-                                return this.renderSyncStatus(row, i);
-                            })
-                        }
-                    </ScrollView>;
+                return index === 2 && this._renderTabComponent('synched');
             case 'pending':
-                return index === 3 &&
-                    <ScrollView>
-                        {
-                            capturedData.filter(captureRow => captureRow.syncStatus === 'pending synch').map((row, i) => {
-                                return this.renderSyncStatus(row, i);
-                            })
-                        }
-                    </ScrollView>;
+                return index === 3 && this._renderTabComponent('pending');
             default:
                 return index === 0 &&
-                    <ScrollView>
-                        {
-                            capturedData.map((row, i) => {
-                                return this.renderSyncStatus(row, i);
-                            })
-                        }
-                    </ScrollView>;
+                    <InfiniteScroll
+                        horizontal={false}  //true - if you want in horizontal
+                        onLoadMoreAsync={this.loadMorePage}
+                        distanceFromEnd={10} // distance in density-independent pixels from the right end
+                        style={styles.scrollView}>
+                        <ScrollView>
+                            {
+                                captureData.slice(0, this.state.loadNum).map((row, i) => {
+                                    return this.renderSyncStatus(row, i);
+                                })
+                            }
+                        </ScrollView>
+                    </InfiniteScroll>;
         }
     };
 
@@ -147,7 +177,7 @@ class CaptureResultScreen extends Component {
                                 onPress={() => this.setState({index: index})}
                             >
                                 <Animatable.Text
-                                    style={[styles.tabTitle, {color: this.state.index === index ? '#1f2952' : '#232f5b'}]}>{route.title}</Animatable.Text>
+                                    style={[styles.tabTitle, {color: this.state.index === index ? '#1f2952' : '#232f5b'}]}>{this.renderTitle(route.title)}</Animatable.Text>
                                 <Animatable.View
                                     style={[styles.tabIndicator, {backgroundColor: this.state.index === index ? '#233162' : 'white'}]}/>
                             </TouchableOpacity>
@@ -158,35 +188,72 @@ class CaptureResultScreen extends Component {
         )
     };
 
+    _renderTabComponent = (type) => {
+        const { captureData } = this.state;
+        return(
+            <InfiniteScroll
+                horizontal={false}  //true - if you want in horizontal
+                onLoadMoreAsync={this.loadMorePage}
+                distanceFromEnd={10} // distance in density-independent pixels from the right end
+                style={styles.scrollView}>
+                <ScrollView style={styles.tabView}>
+                    {
+                        captureData.filter(captureRow => captureRow.storeStatus === type).slice(0, this.state.loadNum).map((row, i) => {
+                            return this.renderSyncStatus(row, i);
+                        })
+                    }
+                </ScrollView>
+            </InfiniteScroll>
+        )
+    };
+
+    loadMorePage = () => {
+        this.setState({ loadNum: this.state.loadNum + 10 });
+    };
+
     render() {
+        const { loading, captureData } = this.state;
         return (
-            <Animatable.View style={styles.container}>
-                <CustomHeader title={'Capture Status'}/>
-                <TouchableOpacity style={styles.manualRefresh}>
-                    <Animatable.Text style={styles.refreshText}>FORCE MANUAL RESYNCH</Animatable.Text>
-                </TouchableOpacity>
-                <Animatable.View style={styles.captureStatus}>
-                    <Animatable.View style={styles.warning}>
-                        <Animatable.Image source={Images.warning} style={styles.warningImage}/>
-                        <Animatable.Text style={styles.warningResult}>3 Errors</Animatable.Text>
-                    </Animatable.View>
-                    <Animatable.View style={styles.pending}>
-                        <Animatable.Image source={Images.pending} style={styles.pendingImage}/>
-                        <Animatable.Text style={styles.pendingResult}>57 Pending Synch</Animatable.Text>
-                    </Animatable.View>
-                </Animatable.View>
-                <Animatable.View style={styles.tabContainer}>
-                    <TabView
-                        navigationState={this.state}
-                        renderScene={this._renderScene}
-                        renderTabBar={this._renderTabBar}
-                        onIndexChange={index => this.setState({index})}
-                        initialLayout={{width: 1 * scale.deviceWidth, height: 0}}
-                    />
-                </Animatable.View>
+            <Animatable.View style={loading ? styles.loadingContainer : styles.container}>
+                {
+                    loading ?
+                        <ActivityIndicator size="large" color="#0000ff" /> :
+                        captureData !== null &&
+                        <React.Fragment>
+                            <CustomHeader title={'Capture Status'}/>
+                            <TouchableOpacity style={styles.manualRefresh}>
+                                <Animatable.Text style={styles.refreshText}>FORCE MANUAL RESYNCH</Animatable.Text>
+                            </TouchableOpacity>
+                            <Animatable.View style={styles.captureStatus}>
+                                <Animatable.View style={styles.warning}>
+                                    <Animatable.Image source={Images.warning} style={styles.warningImage}/>
+                                    <Animatable.Text style={styles.warningResult}>
+                                        { captureData.filter(upc => upc.storeStatus === 'error').length } Errors
+                                    </Animatable.Text>
+                                </Animatable.View>
+                                <Animatable.View style={styles.pending}>
+                                    <Animatable.Image source={Images.pending} style={styles.pendingImage}/>
+                                    <Animatable.Text style={styles.pendingResult}>
+                                        { captureData.filter(upc => upc.storeStatus === 'pending').length } Pending Synch
+                                    </Animatable.Text>
+                                </Animatable.View>
+                            </Animatable.View>
+                            <Animatable.View style={styles.tabContainer}>
+                                <TabView
+                                    navigationState={this.state}
+                                    renderScene={this._renderScene}
+                                    renderTabBar={this._renderTabBar}
+                                    onIndexChange={index => this.setState({index})}
+                                    initialLayout={{width: 1 * scale.deviceWidth, height: 0}}
+                                />
+                            </Animatable.View>
+                        </React.Fragment>
+                }
             </Animatable.View>
         )
     }
 }
 
-export default CaptureResultScreen;
+export default compose(
+    withAuth
+)(CaptureResultScreen);

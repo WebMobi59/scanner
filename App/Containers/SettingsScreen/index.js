@@ -14,7 +14,7 @@ import {Metrics, Colors, Images} from '../../Themes';
 import ValidatedFormScreen from '../ValidatedFormScreen';
 import Button from '../../Components/Button';
 import CloseButton from '../../Components/CloseButton';
-import ApolloClient from '../../Lib/Apollo';
+import { apolloClient } from '../../Lib/Apollo';
 import withData from '../../Decorators/withData';
 import SageActions from '../../Redux/SageRedux';
 import SegmentedControlTab from "react-native-segmented-control-tab";
@@ -85,7 +85,7 @@ class Index extends ValidatedFormScreen {
         this.setState({loading: true}, async () => {
             try {
                 await this.props.logout();
-                ApolloClient.resetStore();
+                apolloClient.resetStore();
                 // this.setState({ loading: false })
                 this.props.handleReset(this.state);
                 this.props.resetNavigation()
@@ -292,10 +292,3 @@ const enhance = compose(
 );
 
 export default enhance(Index)
-
-// const Info = ({label, value}) => (
-//     <View style={styles.info}>
-//         <Text style={styles.infoLabel}>{label}</Text>
-//         <Text>{value}</Text>
-//     </View>
-// );
