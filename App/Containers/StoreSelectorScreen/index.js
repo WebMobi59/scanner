@@ -114,12 +114,15 @@ class StoreSelectorScreen extends Component {
                         </RNPickerSelect>
                     </Animatable.View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.finishButton}>
-                    <Animatable.Text style={styles.finishText}>Finish</Animatable.Text>
-                </TouchableOpacity>
+                {
+                    !!selectedStore &&
+                    <TouchableOpacity style={styles.finishButton} onPress={() => this.props.navigation.navigate('CreateAccountScreen')}>
+                        <Animatable.Text style={styles.finishText}>Finish</Animatable.Text>
+                    </TouchableOpacity>
+                }
                 <Animatable.View style={styles.textGroup}>
                     <Animatable.Text style={styles.text1}>I’m not in a store</Animatable.Text>
-                    <Animatable.Text style={styles.text2}>Skip store selection</Animatable.Text>
+                    <Animatable.Text style={styles.text2} onPress={() => this.props.navigation.navigate('CreateAccountScreen')}>Skip store selection</Animatable.Text>
                     <Animatable.View style={styles.underLine} />
                 </Animatable.View>
             </Animatable.View>

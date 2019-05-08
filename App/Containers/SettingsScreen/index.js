@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {View, Text, Alert, ScrollView, TouchableOpacity, Image, StatusBar,} from 'react-native';
+import {View, Text, Alert, ScrollView, TouchableOpacity, Image, StatusBar} from 'react-native';
 import {compose, withPropsOnChange} from 'recompose';
 import {get as _get} from 'lodash';
 import * as Animatable from 'react-native-animatable';
@@ -130,7 +130,7 @@ class Index extends ValidatedFormScreen {
 
     handleProductChecklist = () => this.props.navigation.navigate('ChecklistScreen', {transition: 'card'});
 
-    handleSyncScreen = () => this.props.navigation.navigate('SyncScreen', {transition: 'card'});
+    handleSyncScreen = () => this.props.navigation.navigate('ForceSyncScreen', {transition: 'card'});
 
     handleCaptureResultScreen = () => this.props.navigation.navigate('CaptureResultScreen', {transition: 'card'});
 

@@ -1,20 +1,21 @@
-import {createStackNavigator} from 'react-navigation'
-import LaunchScreen from '../Containers/LaunchScreen'
-import OnboardingScreenWrapper from '../Containers/OnboardingScreen/OnboardingScreenWrapper'
-import LoginScreenWrapper from '../Containers/LoginScreen/LoginScreenWrapper'
-import CreateAccountScreenWrapper from '../Containers/CreateAccountScreen/CreateAccountScreenWrapper'
-import EnterCodeScreenWrapper from '../Containers/EnterCodeScreen/EnterCodeScreenWrapper'
-import SettingsScreenWrapper from '../Containers/SettingsScreen/SettingsScreenWrapper'
-import ScannerScreenWrapper from '../Containers/SannerScreen/ScannerScreenWrapper'
-import CameraScreenWrapper from '../Containers/CameraScreen/CameraScreenWrapper'
-import ConfirmProductScreenWrapper from '../Containers/ConfirmProductScreen/ConfirmProductScreenWrapper'
-import ConfirmProductPhotosScreenWrapper from '../Containers/ConfirmProductPhotoScreen/ConfirmProductPhotosScreenWrapper'
-import NewProductScreenWrapper from '../Containers/NewProductScreen/NewProductScreenWrapper'
-import InfoScreenWrapper from '../Containers/InfoScreen/InfoScreenWrapper'
-import ChecklistScreenWrapper from '../Containers/ChecklistScreen/ChecklistScreenWrapper'
-import SyncScreenWrapper from '../Containers/SyncScreen/SyncScreenWrapper'
-import ModeSelectorScreenWrapper from '../Containers/ModeSelectorScreen/ModeSelectorScreenWrapper'
-import StoreSelectorScreenWrapper from '../Containers/StoreSelectorScreen/StoreSelectorScreenWrapper'
+import {createStackNavigator} from 'react-navigation';
+import LaunchScreen from '../Containers/LaunchScreen';
+import OnboardingScreenWrapper from '../Containers/OnboardingScreen/OnboardingScreenWrapper';
+import LoginScreenWrapper from '../Containers/LoginScreen/LoginScreenWrapper';
+import CreateAccountScreenWrapper from '../Containers/CreateAccountScreen/CreateAccountScreenWrapper';
+import EnterCodeScreenWrapper from '../Containers/EnterCodeScreen/EnterCodeScreenWrapper';
+import SettingsScreenWrapper from '../Containers/SettingsScreen/SettingsScreenWrapper';
+import ScannerScreenWrapper from '../Containers/SannerScreen/ScannerScreenWrapper';
+import CameraScreenWrapper from '../Containers/CameraScreen/CameraScreenWrapper';
+import ConfirmProductScreenWrapper from '../Containers/ConfirmProductScreen/ConfirmProductScreenWrapper';
+import ConfirmProductPhotosScreenWrapper from '../Containers/ConfirmProductPhotoScreen/ConfirmProductPhotosScreenWrapper';
+import NewProductScreenWrapper from '../Containers/NewProductScreen/NewProductScreenWrapper';
+import InfoScreenWrapper from '../Containers/InfoScreen/InfoScreenWrapper';
+import ChecklistScreenWrapper from '../Containers/ChecklistScreen/ChecklistScreenWrapper';
+import SyncScreenWrapper from '../Containers/SyncScreen/SyncScreenWrapper';
+import ForceSyncScreenWrapper from '../Containers/ForceSyncScreen/ForceSyncScreenWrapper';
+import ModeSelectorScreenWrapper from '../Containers/ModeSelectorScreen/ModeSelectorScreenWrapper';
+import StoreSelectorScreenWrapper from '../Containers/StoreSelectorScreen/StoreSelectorScreenWrapper';
 import PartnerSelectorScreenWrapper from '../Containers/PartnerSelectorScreen/PartnerSelectorScreenWrapper';
 import CaptureResultScreenWrapper from '../Containers/CaptureResultScreen/CaptureResultScreenWrapper';
 
@@ -147,6 +148,7 @@ const AppNavigation = createStackNavigator(
         NewProductScreen: { screen: NewProductScreenWrapper, navigationOptions: { title: 'New Product', gesturesEnabled } },
         InfoScreen: { screen: InfoScreenWrapper, navigationOptions: { title: 'Info', gesturesEnabled: true } },
         ChecklistScreen: { screen: ChecklistScreenWrapper, navigationOptions: { title: 'Checklist', gesturesEnabled } },
+        ForceSyncScreen: { screen: ForceSyncScreenWrapper, navigationOptions: { header: null } },
         SyncScreen: { screen: SyncScreenWrapper, navigationOptions: { title: 'Sync', gesturesEnabled } },
         ModeSelectorScreen: { screen: ModeSelectorScreenWrapper, navigationOptions: { title: 'ModeSelector', gesturesEnabled } },
         StoreSelectorScreen: { screen: StoreSelectorScreenWrapper, navigationOptions: { title: 'StoreSelector', gesturesEnabled } },

@@ -168,4 +168,4 @@ export const getApolloClient = () => {
   return client
 }
 
-export const apolloClient = getApolloClient()
+export const apolloClient = getApolloClient();
