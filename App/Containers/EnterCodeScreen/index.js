@@ -16,7 +16,14 @@ import * as scale from '../../Utils/Scale';
 // React Apollo
 import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators';
 import withApollo from '../../Decorators/withApollo'
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
+import {apolloClient} from "../../Lib/Apollo";
+
+const QUERY_CHECK_CODE = gql`
+  query prCodeCheck($code: String!) {
+    prCodeCheck(code: $code)
+  }
+`;
 
 class EnterCodeScreen extends Component {
     static propTypes = {
@@ -32,7 +39,8 @@ class EnterCodeScreen extends Component {
             code: {value: null, valid: false, error: null},
             loading: false,
             error: null,
-            serverCode: ''
+            serverCode: '',
+            partner: 'wfm'
         };
 
         this.isLoggingIn = false;
@@ -51,19 +59,20 @@ class EnterCodeScreen extends Component {
     }
 
     componentWillUnmount() {
-        this.keyboardDidShowListener.remove()
-        this.keyboardDidHideListener.remove()
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
         this.keyboardDidHideScrollBackListener.remove()
     }
 
-    async componentDidMount() {
+    async componentDidMount({variables = {}} = {}) {
         // const { partner } = this.state;
         // const getCode = await this.props.prCodeCreate({ partner });
+        // console.log('-- get code --', getCode);
         // AsyncStorage.getItem('getCodeCreate').then(getCodeCreate => {
         //
         // });
-        const { getCodeCreate } = JSON.parse(await AsyncStorage.getItem('getCodeCreate'));
-        this.setState({ serverCode: getCodeCreate });
+        // const { getCodeCreate } = JSON.parse(await AsyncStorage.getItem('getCodeCreate'));
+        // this.setState({ serverCode: getCodeCreate });
     }
 
     isValid() {
@@ -105,19 +114,29 @@ class EnterCodeScreen extends Component {
     };
 
     handleSubmit = async () => {
-        const { code, serverCode } = this.state;
-        if (code.value === serverCode.code) {
+        try {
             let code = this.state.code;
-            code.valid = true;
-            code.error = null;
-            this.setState({ code}, () => {
-                this.props.navigation.navigate('ModeSelectorScreen', {transition: 'card'});
+            this.setState({ loading: true });
+            const response = await apolloClient.query({
+                query: QUERY_CHECK_CODE,
+                variables: { code: code.value },
+                fetchPolicy: 'no-cache'
             });
-        } else {
-            let code = this.state.code;
+            if (response.data.prCodeCheck) {
+                code.valid = true;
+                code.error = null;
+                this.setState({ code, loading: false }, () => {
+                    this.props.navigation.navigate('CreateAccountScreen', {transition: 'card'});
+                });
+            } else {
+                let code = this.state.code;
+                code.valid = false;
+                code.error = 'This code does not match with server code';
+                this.setState({ code, loading: false })
+            }
+        } catch (ex) {
+            console.log(ex);
             code.valid = false;
-            code.error = 'This code does not match with server code';
-            this.setState({ code })
         }
     };
 

@@ -80,8 +80,8 @@ class StoreSelectorScreen extends Component {
     render() {
         const { selectedStore, selectedStoreLabel } = this.state;
         const { prStores } = this.props;
-        const stores = _.get(prStores, 'result')
-        console.log('********', stores);
+        const stores = _.get(prStores, 'result');
+        console.log('-------- prStores ---------', stores);
 
         return (
             <Animatable.View style={styles.container}>
@@ -100,7 +100,7 @@ class StoreSelectorScreen extends Component {
                         <RNPickerSelect
                             placeholder={{ label: 'Choose One' }}
                             placeholderTextColor={'#1f2952'}
-                            items={items}
+                            items={Object.values(stores)}
                             onValueChange={this.selectStore}
                             value={selectedStore}
                         >

@@ -39,4 +39,6 @@ console.ignoredYellowBox = [
 ];
 
 console.disableYellowBox = true;
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
+
 AppRegistry.registerComponent('ScannerApp', () => App);

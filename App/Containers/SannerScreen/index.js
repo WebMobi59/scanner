@@ -88,7 +88,8 @@ class Index extends React.Component {
 
         const { partner } = this.state;
         const getCodeInformation = await this.props.prCodeCreate({ partner });
-        await AsyncStorage.setItem('getCodeCreate', JSON.stringify({getCodeCreate: getCodeInformation}));
+        console.log('$$$$$$$$$$$$$$$$$$', getCodeInformation);
+        // await AsyncStorage.setItem('getCodeCreate', JSON.stringify({getCodeCreate: getCodeInformation}));
         this.props.saveCode(getCodeInformation);
     }
 
