@@ -124,11 +124,13 @@ class Index extends ValidatedFormScreen {
 
     handleClose = () => this.props.navigation.goBack();
 
-    handleSelectStore = () => this.props.navigation.navigate('StoreSelectorScreen', {transition: 'card'})
+    handleSelectStore = () => this.props.navigation.navigate('StoreSelectorScreen', {transition: 'card'});
 
-    handleSelectPartner = () => this.props.navigation.navigate('PartnerSelectorScreen', {transition: 'card'})
+    handleSelectPartner = () => this.props.navigation.navigate('PartnerSelectorScreen', {transition: 'card'});
 
     handleProductChecklist = () => this.props.navigation.navigate('ChecklistScreen', {transition: 'card'});
+
+    handleMessageScreen = () => this.props.navigation.navigate('MessagesScreen', {transition: 'card'});
 
     handleSyncScreen = () => this.props.navigation.navigate('ForceSyncScreen', {transition: 'card'});
 
@@ -227,12 +229,12 @@ class Index extends ValidatedFormScreen {
                     </View>
                     <View style={styles.messageSection}>
                         <View style={styles.messageStatus}>
-                            <View style={styles.messageStatusText}>
+                            <TouchableOpacity style={styles.messageStatusText} onPress={this.handleMessageScreen}>
                                 <View style={styles.messageStatusTitleTextContainer}>
                                     <Text style={styles.messageStatusTitleText}>Your Messages</Text>
                                 </View>
                                 <Image source={Images.arrowRight} style={styles.arrowIcon}/>
-                            </View>
+                            </TouchableOpacity>
                             <Text style={styles.messageStatusDetail}>0 messages</Text>
                         </View>
                     </View>

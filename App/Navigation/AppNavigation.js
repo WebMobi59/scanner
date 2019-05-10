@@ -18,6 +18,7 @@ import ModeSelectorScreenWrapper from '../Containers/ModeSelectorScreen/ModeSele
 import StoreSelectorScreenWrapper from '../Containers/StoreSelectorScreen/StoreSelectorScreenWrapper';
 import PartnerSelectorScreenWrapper from '../Containers/PartnerSelectorScreen/PartnerSelectorScreenWrapper';
 import CaptureResultScreenWrapper from '../Containers/CaptureResultScreen/CaptureResultScreenWrapper';
+import MessagesScreenWrapper from '../Containers/MessagesScreen/MessagesScreenWrapper';
 
 import {Metrics, Colors} from '../Themes'
 import styles from './Styles/NavigationStyles'
@@ -153,7 +154,8 @@ const AppNavigation = createStackNavigator(
         ModeSelectorScreen: { screen: ModeSelectorScreenWrapper, navigationOptions: { title: 'ModeSelector', gesturesEnabled } },
         StoreSelectorScreen: { screen: StoreSelectorScreenWrapper, navigationOptions: { title: 'StoreSelector', gesturesEnabled } },
         PartnerSelectorScreen: { screen: PartnerSelectorScreenWrapper, navigationOptions: { title: 'PartnerSelector', gesturesEnabled } },
-        CaptureResultScreen: { screen: CaptureResultScreenWrapper, navigationOptions: { header: null } }
+        CaptureResultScreen: { screen: CaptureResultScreenWrapper, navigationOptions: { header: null } },
+        MessagesScreen: { screen: MessagesScreenWrapper, navigationOptions: { header: null } }
     },
     {
         // Default config for all screens

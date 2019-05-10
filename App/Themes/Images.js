@@ -51,7 +51,8 @@ const images = {
     sync_failed_3: require('../Images/sync_failed_3.png'),
     sync_failed_4: require('../Images/sync_failed_4.png'),
     sync_failed_5: require('../Images/sync_failed_5.png'),
-    sync_failed_6: require('../Images/sync_failed_6.png')
+    sync_failed_6: require('../Images/sync_failed_6.png'),
+    message_screen: require('../Images/message_screen_1.png'),
 };
 
 export default images
