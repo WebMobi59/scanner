@@ -104,6 +104,7 @@ class Storage {
 
         let data;
         try {
+            console.log('---------- variables ----------', variables);
             const response = await apolloClient.query({
                 query: QUERY_PR_DATA,
                 variables,

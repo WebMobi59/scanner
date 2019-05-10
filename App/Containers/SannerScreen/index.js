@@ -80,7 +80,7 @@ class Index extends React.Component {
         Animated.timing(this.state.slideAnimation, {
             duration: 250,
             toValue: this.state.visibleHeight / 2 - Metrics.barcodeHeight / 2
-        }).start()
+        }).start();
 
         // setTimeout(() => {
         //   this.handleBarCodeRead({ data: '011110749086' })

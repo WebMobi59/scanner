@@ -1,17 +1,18 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native';
-import _ from 'lodash';
+import _, {get as _get} from 'lodash';
 import * as Animatable from 'react-native-animatable';
 import InfiniteScroll from 'react-native-infinite-scroll';
-import { compose } from 'recompose';
+import {compose, withPropsOnChange} from 'recompose';
 import gql from 'graphql-tag';
-import { withAuth } from '../../GraphQL/Account/decorators';
+import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators';
 import {apolloClient} from '../../Lib/Apollo';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {CustomHeader} from '../../Components/CustomHeader';
 import {Images} from '../../Themes';
 import * as scale from '../../Utils/Scale';
 import styles from './styles';
+import withApollo from '../../Decorators/withApollo';
 
 const BASE_DATA_PREFIX = '@pinto:prData'; // do not edit this, it will make all phones lose all progress
 
@@ -45,9 +46,10 @@ class CaptureResultScreen extends Component {
             const response = await apolloClient.query({
                 query: QUERY_PR_DATA,
                 variables,
-                fetchPolicy: 'no-cache'
+                fetchPolicy: 'network-only'
             });
             const { prData } = response.data;
+            console.log('------------ prData ------------', prData);
             this.setState({ loading: false, captureData: prData && Object.values(prData.upc) });
             if (response.errors) throw response.errors
         } catch (ex) {
@@ -255,5 +257,13 @@ class CaptureResultScreen extends Component {
 }
 
 export default compose(
-    withAuth
+    withAuth,
+    withPropsOnChange(
+        (props, nextProps) =>
+            _get(props, 'auth.session.isAuthenticated', false) !== _get(nextProps, 'auth.session.isAuthenticated', false),
+        ({ auth }) => ({ isAuthenticated: _get(auth, 'session.isAuthenticated', false) })
+    ),
+    withLogin,
+    withCreateAccount,
+    withApollo('query prData', null, null, null, { renderLoading: 'default', fetchPolicy: 'network-only' })
 )(CaptureResultScreen);

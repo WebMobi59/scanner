@@ -1,50 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import _ from 'lodash';
 import * as Animatable from 'react-native-animatable';
 import { compose, withPropsOnChange } from 'recompose';
 import { get as _get } from 'lodash';
 import RNPickerSelect from 'react-native-picker-select';
-import {Metrics, Images, Colors, Fonts, ApplicationStyles} from '../../Themes';
-import styles from './styles';
-
-// import * as inputValidators from '../../Lib/InputValidators'
-// import { keyboardDidShow, keyboardDidHide } from '../../Lib/ComponentEventHandlers'
-// import Button from '../../Components/Button'
-// import ValidatedTextInput from '../../Components/ValidatedTextInput'
 
 // React Apollo
 import { withAuth, withCreateAccount, withLogin } from '../../GraphQL/Account/decorators';
 import withApollo from '../../Decorators/withApollo';
+import Storage from '../../Utils/Storage';
 import * as scale from '../../Utils/Scale';
-
-const items = [
-    {
-        label: 'Ohio - Andersown Township',
-        value: 'township',
-        texts: {
-            up: 'Anderson Township',
-            bottom: 'Cincinatti, Ohio'
-        }
-    },
-    {
-        label: 'Ohio - Florence Marketplace',
-        value: 'marketplace',
-        texts: {
-            up: 'Florence Marketplace',
-            bottom: 'Cincinatti, Ohio'
-        }
-    },
-    {
-        label: 'Ohio - Greenwood (Ralph\'s)',
-        value: 'ralph',
-        texts: {
-            up: 'Greenwood (Ralph\'s)',
-            bottom: 'Cincinatti, Ohio'
-        }
-    }
-];
+import {Metrics, Images} from '../../Themes';
+import styles from './styles';
 
 class StoreSelectorScreen extends Component {
     static propTypes = {
@@ -59,8 +28,25 @@ class StoreSelectorScreen extends Component {
             visibleHeight: Metrics.screenHeight,
             selectedStore: '',
             selectedStoreLabel: '',
-            loading: true
+            loading: false,
+            items: []
         };
+    }
+
+    componentDidMount() {
+        const { prStores } = this.props;
+        const stores = _.get(prStores, 'result');
+        const storesArr = Object.values(stores['wfm']).map(store => {
+            return {
+                value: store.key,
+                label: `${store.name} - ${store.city} ${store.state}`,
+                texts: {
+                    up: `${store.city} ${store.state}`,
+                    bottom: store.name
+                }
+            }
+        });
+        this.setState({ items: storesArr })
     }
 
     handleEnterPhotoMode = () => {
@@ -73,15 +59,20 @@ class StoreSelectorScreen extends Component {
 
     selectStore = (value) => {
         this.setState({ selectedStore: value }, () => {
-            this.setState({ selectedStoreLabel: items.filter(item => item.value === value)[0].texts });
+            this.setState({ selectedStoreLabel: this.state.items.filter(item => item.value === value)[0].texts });
         });
     };
 
+    updateStore = async () => {
+        this.setState({ loading: true });
+        await this.props.prUserUpdate({ store: this.state.selectedStore });
+        await Storage.fetch();
+        this.setState({ loading: false });
+        this.props.navigation.navigate('ScannerScreen');
+    };
+
     render() {
-        const { selectedStore, selectedStoreLabel } = this.state;
-        const { prStores } = this.props;
-        const stores = _.get(prStores, 'result')
-        console.log('********', stores);
+        const { selectedStore, selectedStoreLabel, loading } = this.state;
 
         return (
             <Animatable.View style={styles.container}>
@@ -100,15 +91,15 @@ class StoreSelectorScreen extends Component {
                         <RNPickerSelect
                             placeholder={{ label: 'Choose One' }}
                             placeholderTextColor={'#1f2952'}
-                            items={items}
+                            items={this.state.items}
                             onValueChange={this.selectStore}
                             value={selectedStore}
                         >
                             {
                                 !!selectedStore ?
                                     <React.Fragment>
-                                        <Animatable.Text style={styles.upText}>{selectedStoreLabel.up}</Animatable.Text>
-                                        <Animatable.Text style={styles.bottomText}>{selectedStoreLabel.bottom}</Animatable.Text>
+                                        <Animatable.Text style={styles.upText}>{selectedStoreLabel && selectedStoreLabel.up}</Animatable.Text>
+                                        <Animatable.Text style={styles.bottomText}>{selectedStoreLabel && selectedStoreLabel.bottom}</Animatable.Text>
                                     </React.Fragment>  :
                                     <Animatable.Text style={styles.placeholderText}>
                                         Select Store
@@ -119,8 +110,12 @@ class StoreSelectorScreen extends Component {
                 </TouchableOpacity>
                 {
                     !!selectedStore &&
-                    <TouchableOpacity style={styles.finishButton} onPress={() => this.props.navigation.navigate('CreateAccountScreen')}>
-                        <Animatable.Text style={styles.finishText}>Finish</Animatable.Text>
+                    <TouchableOpacity style={styles.finishButton} onPress={this.updateStore}>
+                        {
+                            loading ?
+                                <ActivityIndicator size={'small'} color={'#ffffff'} /> :
+                                <Animatable.Text style={styles.finishText}>Finish</Animatable.Text>
+                        }
                     </TouchableOpacity>
                 }
                 <Animatable.View style={styles.textGroup}>
