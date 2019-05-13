@@ -59,8 +59,7 @@ export default StyleSheet.create({
         height: 48 * scale.heightRatio,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 4 * scale.heightRatio,
-        backgroundColor: '#4a7ffb',
+        borderRadius: 4 * scale.heightRatio
     },
     buttonText: {
         color: '#ffffff',

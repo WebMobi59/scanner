@@ -87,9 +87,9 @@ class SyncScreen extends PureComponent {
             }
         }
 
-        if (error) notifyAndLogError(error)
+        if (error) notifyAndLogError(error);
         else {
-            await this.props.data.fetch()
+            await this.props.data.fetch();
             if (!quickSync) this.queuePeriodicUpdate()
         }
 
@@ -100,18 +100,19 @@ class SyncScreen extends PureComponent {
     }
 
     render() {
-        const {data, navigation} = this.props
-        const {loading, error, progressTotal} = this.state
+        const {data, navigation} = this.props;
+        const {loading, error, progressTotal} = this.state;
 
-        const touchedItems = _.map(_.get(data, 'diff.upc'))
+        const touchedItems = _.map(_.get(data, 'diff.upc'));
         const [outOfStockRemain, productsRemain] = _.partition(
             touchedItems,
             (x) => !['cart', 'done'].includes(x.storeStatus) && x.outOfStock
-        ).map((x) => x.length)
-        const photosRemain = _.filter(_.flatMap(touchedItems, 'photos')).length
-        let progress = (progressTotal - photosRemain - productsRemain) / progressTotal
-        progress = !isFinite(progress) || isNaN(progress) ? 0 : progress
-        console.log('sync progress @DMITRI', progress)
+        ).map((x) => x.length);
+        const photosRemain = _.filter(_.flatMap(touchedItems, 'photos')).length;
+        let progress = (progressTotal - photosRemain - productsRemain) / progressTotal;
+        progress = !isFinite(progress) || isNaN(progress) ? 0 : progress;
+        console.log('sync progress @DMITRI', progress);
+
         return (
             <BackAndHelpNavigationBar
                 navigation={this.props.navigation}

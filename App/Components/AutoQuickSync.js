@@ -45,10 +45,10 @@ class AutoQuickSync extends PureComponent {
 
     // don't sync on the sync screen, for syncing reasons
     canSync() {
-        return !['SyncScreen'].includes(this.props.currentScreen)
+        return !['ForceSyncScreen'].includes(this.props.currentScreen)
     }
 
-    async quickSync() {
+    quickSync = async () => {
         const {data} = this.props;
 
         if (!this.canSync()) return;
@@ -65,9 +65,9 @@ class AutoQuickSync extends PureComponent {
         } catch (error) {
             notifyAndLogError(error)
         }
-    }
+    };
 
-    async runSyncLoop() {
+    runSyncLoop = async () => {
         if (!__DEV__) await PromiseUtil.sleep(60e3); // delay the start of this, allow startup fetches
 
         while (true) {
@@ -91,7 +91,7 @@ class AutoQuickSync extends PureComponent {
 
             await PromiseUtil.sleep(timeout)
         }
-    }
+    };
 
     render() {
         if (__DEV__) global.AutoQuickSync = this;

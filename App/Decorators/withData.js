@@ -54,7 +54,7 @@ class _WithDataDecorator extends PureComponent {
         _.invoke(this, '_unbind')
     }
 
-    _getToUpdate() {
+    _getToUpdate = () => {
         return _.map(
             _.filter(
                 _.get(this.state.diff, 'upc'),
@@ -63,22 +63,22 @@ class _WithDataDecorator extends PureComponent {
             (item) =>
                 _.pick(item, ['upc', 'storeStatus', 'payload', 'photos', 'outOfStock'])
         )
-    }
+    };
 
-    async removeAllPhotos() {
+    removeAllPhotos = async () => {
         let list = await RNFS.readDir(CAMERA_DIR);
         list = list.filter((x) => x.isFile());
         await Promise.all(list.map((item) => RNFS.unlink(item.path)));
         console.warn(`Removed ${list.length} photos`)
-    }
+    };
 
-    async removeAllData() {
+    removeAllData = async () => {
         console.warn('removeAllData()');
         await this.removeAllPhotos();
         await Storage.removeAllData()
-    }
+    };
 
-    async _syncUpcList(upcList, onUpload) {
+    _syncUpcList = async (upcList, onUpload) => {
         const {
             auth: {
                 session: {
@@ -139,9 +139,9 @@ class _WithDataDecorator extends PureComponent {
         }
 
         return allPassed
-    }
+    };
 
-    async quickSync() {
+    quickSync = async () => {
         const upcList = _.cloneDeep(this._getToUpdate())
             .filter((item) => !item.isQuickSynced && (['cart', 'done'].includes(item.storeStatus) || item.outOfStock))
             .map((item) =>
@@ -157,15 +157,15 @@ class _WithDataDecorator extends PureComponent {
             if (item.toQuickSync) return this.updateUpc(item.upc, {isQuickSynced: true});
             else return this.clearUpcOnSyncHandler(item)
         })
-    }
+    };
 
-    async sync() {
+    sync = async () => {
         return this._syncUpcList(_.cloneDeep(this._getToUpdate()), (item) =>
             this.clearUpcOnSyncHandler({...item, isSafeToClearDiff: true, isSafeToRemovePhotos: true})
         )
-    }
+    };
 
-    async syncOne() {
+    syncOne = async () => {
         const [done, rest] = _.partition(this._getToUpdate(), {storeStatus: 'done'});
         const list = _.shuffle(done.length ? done : rest).slice(0, 1);
 
@@ -179,7 +179,7 @@ class _WithDataDecorator extends PureComponent {
         } catch (error) {
             return {ok: false, error}
         }
-    }
+    };
 
     clearUpcOnSyncHandler = async (item) => {
         try {
@@ -194,7 +194,7 @@ class _WithDataDecorator extends PureComponent {
         }
     };
 
-    async updateUpc(upc, diff) {
+    updateUpc = async (upc, diff) => {
         const {incrementUserStat} = this.props;
         const {storeStatus} = this.state.getUPC(upc) || {};
         await Storage.updateUpc(upc, diff);
@@ -202,7 +202,7 @@ class _WithDataDecorator extends PureComponent {
         if (diff.storeStatus !== storeStatus && ['done', 'cart'].includes(diff.storeStatus)) {
             incrementUserStat(diff.storeStatus)
         }
-    }
+    };
 
     render() {
         const {Klass, props} = this.props;
