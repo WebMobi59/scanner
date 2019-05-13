@@ -54,7 +54,7 @@ class Index extends ValidatedFormScreen {
     }
 
     handleIndexChange(type, index) {
-        if (type == 1) {
+        if (type === 1) {
             this.setState({
                 ...this.state,
                 selectedIndex1: index

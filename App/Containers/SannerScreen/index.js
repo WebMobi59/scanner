@@ -5,7 +5,7 @@ import {isEmpty, pathOr} from 'ramda'
 
 import {withNavigationFocus} from 'react-navigation-is-focused-hoc'
 import {connect} from 'react-redux'
-import _ from 'lodash'
+import _, {get as _get} from 'lodash'
 import * as Animatable from 'react-native-animatable'
 
 import {Metrics, Images, Colors} from '../../Themes'
@@ -29,6 +29,7 @@ import getBarcodeWithDefaults from '../../Utils/getBarcodeWithDefaults'
 // Styles
 import Styles from '../Styles/ScannerScreenStyles'
 import {RNCamera} from 'react-native-camera'
+import {withAuth, withCreateAccount, withLogin} from '../../GraphQL/Account/decorators'
 import withApollo from '../../Decorators/withApollo';
 
 const barcodeFrameBounds = {
@@ -393,6 +394,14 @@ const enhance = compose(
         }
     ),
     withData,
+    withAuth,
+    withPropsOnChange(
+        (props, nextProps) =>
+            _get(props, 'auth.session.isAuthenticated', false) !== _get(nextProps, 'auth.session.isAuthenticated', false),
+        ({auth}) => ({isAuthenticated: _get(auth, 'session.isAuthenticated', false)})
+    ),
+    withLogin,
+    withCreateAccount,
     withApollo(
         'mutation prCodeCreate',
         {partner: 'String!'},
