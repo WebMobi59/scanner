@@ -21,11 +21,18 @@ import SegmentedControlTab from "react-native-segmented-control-tab";
 
 // React Apollo
 import {withAuth, withLogout} from '../../GraphQL/Account/decorators';
+import gql from 'graphql-tag';
 
 import { CustomHeader } from '../../Components/CustomHeader';
 
 import styles from './styles';
 import * as scale from '../../Utils/Scale';
+
+const QUERY_PR_DATA = gql`
+  query prData($updatedDate: String) {
+    prData(updatedDate: $updatedDate)
+  }
+`;
 
 class Index extends ValidatedFormScreen {
     static propTypes = {
@@ -47,10 +54,29 @@ class Index extends ValidatedFormScreen {
             visibleHeight: Metrics.screenHeight,
             loading: false,
             selectedIndex1: 0,
-            selectedIndex2: 0
+            selectedIndex2: 0,
+            captureData: null
         };
 
         this.scrollY = 0
+    }
+
+    async componentDidMount({variables = {}} = {}) {
+        this.setState({ loading: true });
+        try {
+            const response = await apolloClient.query({
+                query: QUERY_PR_DATA,
+                variables,
+                fetchPolicy: 'network-only'
+            });
+            const { prData } = response.data;
+            console.log('------------ prData ------------', prData);
+            this.setState({ loading: false, captureData: prData && Object.values(prData.upc) });
+            if (response.errors) throw response.errors
+        } catch (ex) {
+            console.log(ex);
+            this.setState({ loading: false });
+        }
     }
 
     handleIndexChange(type, index) {
@@ -138,7 +164,7 @@ class Index extends ValidatedFormScreen {
 
     render() {
         const {data, tag, setTag, autoQuickSync, setAutoQuickSync, auth, prStores, prUserUpdate} = this.props;
-        const {loading} = this.state;
+        const {loading, captureData} = this.state;
 
         StatusBar.setBarStyle('dark-content', true);
         return (
@@ -218,11 +244,24 @@ class Index extends ValidatedFormScreen {
                             </View>
                             <Image source={Images.arrowRight} style={styles.arrowIcon}/>
                         </TouchableOpacity>
-                        <Text style={styles.sessionCaptureDetail}>125 Captured; 68 Synched; 57 Pending Synch</Text>
+                        <Text style={styles.sessionCaptureDetail}>
+                            {captureData !== null && captureData.length} Captured;
+                            {captureData !== null && captureData.filter(upc => upc.storeStatus === 'done').length} Synced;
+                            {captureData !== null && captureData.filter(upc => upc.storeStatus === 'pending').length} Pending Sync
+                        </Text>
                         <View style={styles.barStyle}>
-                            <View style={styles.activeBarStyle} />
+                            <View
+                                style={
+                                    [styles.activeBarStyle,
+                                        { width: `${captureData !== null && captureData.length > 0 ? captureData.filter(upc => upc.storeStatus === 'pending').length / captureData.length * 100 : 100}%`
+                                        }
+                                    ]
+                                }
+                            />
                         </View>
-                        <Text style={styles.statusDetail}>Synch Status: 57% synched to server</Text>
+                        <Text style={styles.statusDetail}>
+                            Sync Status: { captureData !== null && captureData.length > 0 ? captureData.filter(upc => upc.storeStatus === 'pending').length / captureData.length * 100 : 100 }% synced to server
+                        </Text>
                         <TouchableOpacity style={styles.manualSyncButton} onPress={this.handleSyncScreen}>
                             <Text style={styles.manualSyncButtonText}>FORCE MANUAL SYNC</Text>
                         </TouchableOpacity>

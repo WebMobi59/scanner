@@ -236,7 +236,7 @@ class CaptureResultScreen extends Component {
                                 <Animatable.View style={styles.pending}>
                                     <Animatable.Image source={Images.pending} style={styles.pendingImage}/>
                                     <Animatable.Text style={styles.pendingResult}>
-                                        { captureData.filter(upc => upc.storeStatus === 'pending').length } Pending Synch
+                                        { captureData.filter(upc => upc.storeStatus === 'pending').length } Pending Sync
                                     </Animatable.Text>
                                 </Animatable.View>
                             </Animatable.View>
