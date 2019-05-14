@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
-import {View, Text, TouchableOpacity, ScrollView, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, FlatList, StatusBar} from 'react-native';
 import _ from 'lodash';
 
 import withData from '../../Decorators/withData';
@@ -12,6 +12,7 @@ import BarcodeVerdict from '../BarcodeVerdict';
 import CloseButton from '../../Components/CloseButton';
 import Camera from '../../Components/Camera';
 import InlineSelect from '../../Components/InlineSelect';
+import styles from './styles';
 
 const SORT_OPTIONS = [
     {key: 'name', label: 'Name'},
@@ -20,11 +21,15 @@ const SORT_OPTIONS = [
 ];
 
 class Index extends PureComponent {
-    state = {
-        page: 0,
-        sort: 'category',
-        barcode: null
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            page: 0,
+            sort: 'category',
+            barcode: null
+        };
+    }
 
     handleClose = () => this.props.navigation.goBack();
 
@@ -47,7 +52,7 @@ class Index extends PureComponent {
 
         if (data.loading && !data.result) {
             return (
-                <View style={Styles.root}>
+                <View style={styles.root}>
                     <Text>loading...</Text>
                 </View>
             )
@@ -55,7 +60,7 @@ class Index extends PureComponent {
 
         if (barcode) {
             return (
-                <View style={Styles.root}>
+                <View style={styles.root}>
                     <BarcodeVerdict
                         barcode={getBarcodeWithDefaults(data, barcode)}
                         onClose={() => this.setState({barcode: null})}
@@ -92,45 +97,51 @@ class Index extends PureComponent {
                 location: item.location
             }
         });
+
+        StatusBar.setBarStyle('light-content', true);
         return (
-            <View style={Styles.root}>
-                <View style={Styles.nav}>
-                    <Text style={Styles.navTitle}>Products: {list.length} pending</Text>
+            <View style={styles.root}>
+                <View style={styles.nav}>
+                    <Text style={styles.navTitle}>Products: {list.length} pending</Text>
                     <CloseButton onPress={this.handleClose}/>
                 </View>
 
-                <View style={Styles.sort}>
-                    <Text style={Styles.sortText}>Sort by:</Text>
+                <View style={styles.searchInputWrapper}>
+
+                </View>
+
+                <View style={styles.sort}>
+                    <Text style={styles.sortText}>Sort by:</Text>
                     <InlineSelect
                         compact
                         value={sort}
                         options={SORT_OPTIONS}
                         onChange={this.handleSortChange}
-                        style={Styles.sortSelect}
+                        style={styles.sortSelect}
                     />
                 </View>
 
                 <FlatList
-                    style={Styles.list}
+                    style={styles.list}
                     key={page}
                     data={listData}
                     renderItem={({item, index}) => {
-                        const {category, name, upc, location} = item
+                        const {category, name, upc, location} = item;
                         // console.log('index', index)
                         return (
                             <TouchableOpacity key={`${upc}${index}`} onPress={this.setBarcode.bind(this, upc)}>
-                                <View style={Styles.item}>
-                                    <View style={Styles.row}>
-                                        <Text style={Styles.itemName}>{toTitleCase(name)}</Text>
+                                <View style={styles.item}>
+                                    <View style={styles.row}>
+                                        <Text style={styles.itemName}>{toTitleCase(name)}</Text>
                                         {location ? (
-                                            <Text style={Styles.itemLocation}>
+                                            <Text style={styles.itemLocation}>
                                                 {location.aisle} {location.side}
                                             </Text>
                                         ) : null}
                                     </View>
-                                    <View style={[Styles.row, Styles.itemInfo]}>
-                                        <Text style={Styles.category}>{toTitleCase(category)}</Text>
-                                        <Text style={Styles.upc}>{upc}</Text>
+                                    <View style={[styles.row, styles.itemInfo]}>
+                                        <Text style={styles.category}>{toTitleCase(category)}</Text>
+                                        <Text style={styles.upc}>{upc}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -138,48 +149,48 @@ class Index extends PureComponent {
                     }}
                 />
 
-                {/* <ScrollView style={Styles.list} key={page}>
+                {/* <ScrollView style={styles.list} key={page}>
           {current.map(({ category, name, upc, location }) => (
             <TouchableOpacity key={upc} onPress={this.setBarcode.bind(this, upc)}>
-              <View style={Styles.item}>
-                <View style={Styles.row}>
-                  <Text style={Styles.itemName}>{toTitleCase(name)}</Text>
+              <View style={styles.item}>
+                <View style={styles.row}>
+                  <Text style={styles.itemName}>{toTitleCase(name)}</Text>
                   {location ? (
-                    <Text style={Styles.itemLocation}>
+                    <Text style={styles.itemLocation}>
                       {location.aisle} {location.side}
                     </Text>
                   ) : null}
                 </View>
-                <View style={[Styles.row, Styles.itemInfo]}>
-                  <Text style={Styles.category}>{toTitleCase(category)}</Text>
-                  <Text style={Styles.upc}>{upc}</Text>
+                <View style={[styles.row, styles.itemInfo]}>
+                  <Text style={styles.category}>{toTitleCase(category)}</Text>
+                  <Text style={styles.upc}>{upc}</Text>
                 </View>
               </View>
             </TouchableOpacity>
           ))}
         </ScrollView> */}
 
-                <View style={[Styles.row, Styles.pagination]}>
+                <View style={[styles.row, styles.pagination]}>
                     <TouchableOpacity
-                        style={[Styles.button, noPrev && Styles.buttonDisabled]}
+                        style={[styles.button, noPrev && styles.buttonDisabled]}
                         onPress={noPrev ? null : this.handlePrev}
                     >
                         <Text>prev</Text>
                     </TouchableOpacity>
-                    <View style={Styles.paginationIndex}>
+                    <View style={styles.paginationIndex}>
                         <Text>{`${page + 1} / ${numPages}`}</Text>
                     </View>
                     <TouchableOpacity
-                        style={[Styles.button, noNext && Styles.buttonDisabled]}
+                        style={[styles.button, noNext && styles.buttonDisabled]}
                         onPress={noNext ? null : this.handleNext}
                     >
                         <Text>next</Text>
                     </TouchableOpacity>
                 </View>
 
-                <Camera autoFocus wrapperStyle={Styles.camera} onBarCodeRead={this.handleBarCodeReadThrottled}>
-                    <View style={Styles.cameraContent}>
-                        <Text style={Styles.cameraText}>Barcode Scanner</Text>
+                <Camera autoFocus wrapperStyle={styles.camera} onBarCodeRead={this.handleBarCodeReadThrottled}>
+                    <View style={styles.cameraContent}>
+                        <Text style={styles.cameraText}>Barcode Scanner</Text>
                     </View>
                 </Camera>
             </View>
@@ -188,103 +199,3 @@ class Index extends PureComponent {
 }
 
 export default withData(Index)
-
-import {StyleSheet} from 'react-native'
-import {Metrics, Colors, Fonts} from '../../Themes'
-import {setBarcode} from '../../Redux/SageRedux'
-
-const Styles = StyleSheet.create({
-    root: {
-        backgroundColor: Colors.background,
-        height: Metrics.screenHeight
-    },
-    nav: {
-        flex: 0,
-        backgroundColor: Colors.primary,
-        paddingLeft: Metrics.baseMargin,
-        paddingTop: Metrics.statusBarHeight,
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    navTitle: {
-        ...Fonts.style.heading,
-        color: 'white',
-        flex: 1
-    },
-    list: {
-        flex: 1
-    },
-    item: {
-        marginBottom: Metrics.baseMargin + Metrics.halfBaseMargin,
-        paddingHorizontal: Metrics.baseMargin
-    },
-    itemName: {
-        flex: 1,
-        fontWeight: 'bold'
-    },
-    itemLocation: {
-        flex: 0
-    },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    itemInfo: {
-        backgroundColor: '#ddd',
-        paddingVertical: 2
-    },
-    category: {
-        flex: 1
-    },
-    upc: {
-        ...Fonts.style.monospace
-    },
-    camera: {
-        flex: 0,
-        height: 150,
-        width: Metrics.screenWidth
-    },
-    cameraContent: {
-        alignSelf: 'stretch',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        padding: 2
-    },
-    cameraText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    sort: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: Metrics.baseMargin,
-        marginVertical: Metrics.baseMargin
-    },
-    sortText: {
-        marginRight: Metrics.baseMargin,
-        fontWeight: 'bold'
-    },
-    sortSelect: {
-        flex: 1
-    },
-    pagination: {
-        marginTop: Metrics.baseMargin
-    },
-    paginationIndex: {
-        flex: 1,
-        marginHorizontal: Metrics.baseMargin,
-        alignItems: 'center'
-    },
-    button: {
-        flex: 0,
-        padding: Metrics.baseMargin,
-        margin: Metrics.baseMargin / 2,
-        backgroundColor: Colors.green,
-        borderRadius: 4,
-        width: 100,
-        alignItems: 'center'
-    },
-    buttonDisabled: {
-        backgroundColor: Colors.gray
-    }
-})
