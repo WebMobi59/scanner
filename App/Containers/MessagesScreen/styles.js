@@ -39,7 +39,7 @@ export default StyleSheet.create({
         flex: 1,
         borderColor: '#ededed',
         borderStyle: 'solid',
-        borderTopWidth: 1 * scale.heightRatio
+        borderTopWidth: scale.heightRatio
     },
     emptyBox: {
         flex: 1,
@@ -64,18 +64,26 @@ export default StyleSheet.create({
         paddingVertical: 27 * scale.heightRatio,
         borderColor: '#ededed',
         borderStyle: 'solid',
-        borderBottomWidth: 1 * scale.widthRatio
+        borderBottomWidth: scale.widthRatio
     },
     rowDetail: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center'
     },
     productImageWrapper: {
-        width: 47 * scale.widthRatio,
-        height: 47 * scale.widthRatio
+        marginTop: 34 * scale.heightRatio,
+        width: 312 * scale.widthRatio,
+        height: 312 * scale.widthRatio,
+        shadowColor: 'rgba(0, 0, 0, 0.12)',
+        shadowOffset: {
+            width: 2,
+            height: 0
+        },
+        shadowRadius: 12 * scale.heightRatio
     },
     detail: {
-        marginLeft: 20 * scale.widthRatio
+
     },
     productUpc: {
         color: '#1f2952',
@@ -85,13 +93,29 @@ export default StyleSheet.create({
         letterSpacing: -0.1 * scale.widthRatio
     },
     productLabelName: {
-        marginTop: 1 * scale.heightRatio,
+        marginTop: scale.heightRatio,
         opacity: 0.5,
         color: '#1f2952',
         fontFamily: Fonts.type.base,
         fontSize: 12 * scale.widthRatio,
         fontWeight: '400',
         letterSpacing: -0.09 * scale.widthRatio
+    },
+    clearButtonWrapper: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 69 * scale.widthRatio,
+        height: 28 * scale.heightRatio,
+        borderRadius: 4 * scale.heightRatio,
+        backgroundColor: '#4a7ffb'
+    },
+    clearButtonText: {
+        textTransform: 'uppercase',
+        color: '#fbfbfc',
+        fontFamily: Fonts.type.bold,
+        fontSize: 11 * scale.widthRatio,
+        fontWeight: '600',
+        letterSpacing: -0.08 * scale.widthRatio
     },
     reason: {
         marginTop: 18 * scale.heightRatio

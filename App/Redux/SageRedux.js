@@ -27,9 +27,9 @@ const {Types, Creators} = createActions({
     setUserStat: ['key', 'value'],
     resetUserStats: null
     // setProp: [ 'key', 'value' ],
-})
+});
 
-export const SageTypes = Types
+export const SageTypes = Types;
 export default Creators
 
 /* ------------- Initial State ------------- */
@@ -38,7 +38,7 @@ const getDefaultUserStats = () => ({
     cart: 0,
     done: 0,
     date: (new Date()).toISOString()
-})
+});
 
 export const INITIAL_STATE = Immutable({
     categories: {},
@@ -54,40 +54,40 @@ export const INITIAL_STATE = Immutable({
     tag: null,
     autoQuickSync: 60,
     userStats: getDefaultUserStats()
-})
+});
 
 /* ------------- Reducers ------------- */
 
-export const categoryMapRequest = state => state.merge({fetching: true})
+export const categoryMapRequest = state => state.merge({fetching: true});
 
-export const categoryMapSuccess = (state, {categories}) => state.merge({fetching: false, categories, error: null})
+export const categoryMapSuccess = (state, {categories}) => state.merge({fetching: false, categories, error: null});
 
-export const categoryMapFailure = (state, {error}) => state.merge({fetching: false, error})
+export const categoryMapFailure = (state, {error}) => state.merge({fetching: false, error});
 
-export const searchBrandsRequest = state => state.merge({fetching: true})
+export const searchBrandsRequest = state => state.merge({fetching: true});
 
-export const searchBrandsSuccess = (state, {brands}) => state.merge({fetching: false, brands, error: null})
+export const searchBrandsSuccess = (state, {brands}) => state.merge({fetching: false, brands, error: null});
 
-export const searchBrandsFailure = (state, {error}) => state.merge({fetching: false, error})
+export const searchBrandsFailure = (state, {error}) => state.merge({fetching: false, error});
 
-export const uploadMediaRequest = state => state.merge({fetching: true})
+export const uploadMediaRequest = state => state.merge({fetching: true});
 
-export const uploadMediaSuccess = (state, {media}) => state.merge({fetching: false, media, error: null})
+export const uploadMediaSuccess = (state, {media}) => state.merge({fetching: false, media, error: null});
 
-export const uploadMediaFailure = (state, {error}) => state.merge({fetching: false, error})
+export const uploadMediaFailure = (state, {error}) => state.merge({fetching: false, error});
 
 export const setMode = (state, {mode}) => {
-    if (!MODE_ENUM[mode]) throw new Error(`Invalid mode: "${mode}"`)
+    if (!MODE_ENUM[mode]) throw new Error(`Invalid mode: "${mode}"`);
     return state.merge({mode})
 }
 
-export const setBarcode = (state, {barcode}) => state.merge({barcode})
+export const setBarcode = (state, {barcode}) => state.merge({barcode});
 
-export const setHasInternet = (state, {hasInternet}) => state.merge({hasInternet})
+export const setHasInternet = (state, {hasInternet}) => state.merge({hasInternet});
 
-export const setTag = (state, {tag}) => state.merge({tag})
+export const setTag = (state, {tag}) => state.merge({tag});
 
-export const setAutoQuickSync = (state, {autoQuickSync}) => state.merge({autoQuickSync})
+export const setAutoQuickSync = (state, {autoQuickSync}) => state.merge({autoQuickSync});
 
 export const incrementUserStat = (state, {storeStatus}) => {
     if ((new Date(state.userStats.date)).getDate() !== (new Date()).getDate()) {
@@ -97,12 +97,12 @@ export const incrementUserStat = (state, {storeStatus}) => {
     return state.merge({
         userStats: state.userStats.merge({[storeStatus]: state.userStats[storeStatus] + 1})
     })
-}
+};
 
 export const setUserStat = (state, {key, value}) =>
-    state.merge({userStats: state.userStats.merge({[key]: value})})
+    state.merge({userStats: state.userStats.merge({[key]: value})});
 
-export const resetUserStats = state => state.merge({userStats: getDefaultUserStats()})
+export const resetUserStats = state => state.merge({userStats: getDefaultUserStats()});
 
 // export const setProp = (state, { key, value }) => {
 //   if (!(key in INITIAL_STATE.asMutable())) throw `[setProp] Invalid key ${key}`;
@@ -130,4 +130,4 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.SET_USER_STAT]: setUserStat,
     [Types.RESET_USER_STATS]: resetUserStats
     // [Types.SET_PROP]: setProp,
-})
+});
