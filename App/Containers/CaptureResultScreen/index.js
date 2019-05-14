@@ -215,6 +215,8 @@ class CaptureResultScreen extends Component {
 
     render() {
         const { loading, captureData } = this.state;
+        const { navigation } = this.props;
+
         return (
             <Animatable.View style={loading ? styles.loadingContainer : styles.container}>
                 {
@@ -222,7 +224,10 @@ class CaptureResultScreen extends Component {
                         <ActivityIndicator size="large" color="#0000ff" /> :
                         captureData !== null &&
                         <React.Fragment>
-                            <CustomHeader title={'Capture Status'}/>
+                            <CustomHeader
+                                title={'Capture Status'}
+                                onClose={() => navigation.goBack()}
+                            />
                             <TouchableOpacity style={styles.manualRefresh}>
                                 <Animatable.Text style={styles.refreshText}>FORCE MANUAL RESYNCH</Animatable.Text>
                             </TouchableOpacity>
@@ -236,7 +241,7 @@ class CaptureResultScreen extends Component {
                                 <Animatable.View style={styles.pending}>
                                     <Animatable.Image source={Images.pending} style={styles.pendingImage}/>
                                     <Animatable.Text style={styles.pendingResult}>
-                                        { captureData.filter(upc => upc.storeStatus === 'pending').length } Pending Synch
+                                        { captureData.filter(upc => upc.storeStatus === 'pending').length } Pending Sync
                                     </Animatable.Text>
                                 </Animatable.View>
                             </Animatable.View>
