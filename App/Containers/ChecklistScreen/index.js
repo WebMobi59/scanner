@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import _ from 'lodash';
 import InfiniteScroll from 'react-native-infinite-scroll';
+import Highlighter from 'react-native-highlight-words';
 import withData from '../../Decorators/withData';
 import toTitleCase from '../../Utils/toTitleCase';
 import getBarcodeWithDefaults from '../../Utils/getBarcodeWithDefaults';
@@ -193,12 +194,32 @@ class Index extends PureComponent {
                                     onPress={() => this.setBarcode(checklist.upc)}
                                 >
                                     <View style={styles.checklistName}>
-                                        <Text style={styles.name}>{checklist.name}</Text>
-                                        <Text style={styles.location}>{checklist.priority}</Text>
+                                        <Highlighter
+                                            highlightStyle={{ backgroundColor: '#00dc92', opacity: 0.25 }}
+                                            style={styles.name}
+                                            searchWords={[this.state.searchText]}
+                                            textToHighlight={checklist.name}
+                                        />
+                                        <Highlighter
+                                            highlightStyle={{ backgroundColor: '#00dc92', opacity: 0.25 }}
+                                            style={styles.location}
+                                            searchWords={[this.state.searchText]}
+                                            textToHighlight={checklist.priority}
+                                        />
                                     </View>
                                     <View style={styles.checklistCategory}>
-                                        <Text style={styles.categoryName}>{checklist.category}/{checklist.subcategory}</Text>
-                                        <Text style={styles.upcTitle}>{checklist.upc}</Text>
+                                        <Highlighter
+                                            highlightStyle={{ backgroundColor: '#00dc92', opacity: 0.25 }}
+                                            style={styles.categoryName}
+                                            searchWords={[this.state.searchText]}
+                                            textToHighlight={`${checklist.priority}/${checklist.subcategory}`}
+                                        />
+                                        <Highlighter
+                                            highlightStyle={{ backgroundColor: '#00dc92', opacity: 0.25 }}
+                                            style={styles.upcTitle}
+                                            searchWords={[this.state.searchText]}
+                                            textToHighlight={checklist.upc}
+                                        />
                                     </View>
                                 </TouchableOpacity>
                             )
