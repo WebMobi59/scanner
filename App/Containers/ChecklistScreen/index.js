@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-
 import {View, Text, TouchableOpacity, FlatList, TextInput, StatusBar, ScrollView} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
@@ -18,41 +17,10 @@ import * as scale from '../../Utils/Scale';
 import styles from './styles';
 import { Images } from '../../Themes';
 
-const checklistData = [
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' },
-    { name: 'Krogera? Cinnamon Applesauce Cups', location: { aisle: 'Aisle', side: '4 left' }, category: 'Applesauce/fruit Squeeze', upc:'0011110898944' }
-];
-
 const SORT_OPTIONS = [
     {key: 'name', label: 'Name'},
     {key: 'category', label: 'Category'},
-    {key: 'aisle', label: 'Aisle'}
+    {key: 'priority', label: 'Priority'}
 ];
 
 class Index extends PureComponent {
@@ -60,6 +28,8 @@ class Index extends PureComponent {
         super(props);
 
         this.state = {
+            originListArr: [],
+            checklistArr: [],
             page: 0,
             sort: 'category',
             barcode: null,
@@ -69,6 +39,17 @@ class Index extends PureComponent {
         };
     }
 
+    componentDidMount() {
+        const { data } = this.props;
+        const originListArr = _.filter(data.result.upc, (x) => x.storeStatus === 'pending');
+        this.setState({ originListArr, checklistArr: originListArr });
+        // const sortedList = this.sortByTab(originListArr, this.state.sort);
+    }
+
+    sortByTab = (list, tab) => {
+        return list.sort((a, b) => (a[tab] > b[tab]) ? 1 : ((b[tab] > a[tab]) ? -1 : 0));
+    };
+
     handleClose = () => this.props.navigation.goBack();
 
     handleBarCodeReadThrottled = _.throttle(({data, type}) => {
@@ -76,15 +57,28 @@ class Index extends PureComponent {
         this.setState({barcode: data})
     }, 500);
 
-    handleSortChange = (sort) => this.setState({sort, page: 0});
+    handleSortChange = (sort) => {
+        this.setState({ sort }, () => {
+            this.setState({ checklistArr: this.sortByTab(this.state.checklistArr, this.state.sort) });
+        });
+    };
 
-    handleNext = () => this.setState({page: this.state.page + 1});
+    setBarcode = (barcode) => this.setState({ barcode });
 
-    handlePrev = () => this.setState({page: this.state.page - 1});
+    onChangeSearchText = searchText => {
+        this.setState({ searchText });
+        if (searchText === '') {
+            this.setState({ checklistArr: this.state.originListArr });
+            return;
+        }
+        let checklistArr = _.filter(this.state.originListArr, (x) => {
+            if (x.name && x.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1) return true;
+            if (x.category && x.category.toLowerCase().indexOf(searchText.toLowerCase()) !== -1) return true;
+            return !!(x.upc && x.upc.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
 
-    setBarcode = (barcode) => this.setState({barcode});
-
-    onChangeSearchText = searchText => this.setState({ searchText });
+        });
+        this.setState({ checklistArr })
+    };
 
     onFocus = () => this.setState({ onFocusFlag: true });
 
@@ -96,7 +90,7 @@ class Index extends PureComponent {
 
     render() {
         const {data} = this.props;
-        const {page, sort, barcode} = this.state;
+        const { sort, barcode } = this.state;
 
         if (data.loading && !data.result) {
             return (
@@ -117,40 +111,26 @@ class Index extends PureComponent {
             )
         }
 
-        let list = _.filter(data.result.upc, (x) => x.storeStatus === 'pending');
-        const v = (obj, k = sort) =>
-            (k === 'aisle'
-                ? obj.location &&
-                obj.location.aisle &&
-                obj.location.aisle.replace(/\d+/g, (x) => String.fromCharCode(65 + parseInt(x, 10)))
-                : obj[k]) || 'zzzz';
-        list = list.sort((a, b) =>
-            v(a) === v(b)
-                ? sort === 'name'
-                ? v(a, 'category').localeCompare(v(b, 'category'))
-                : v(a, 'name').localeCompare(v(b, 'name'))
-                : v(a).localeCompare(v(b))
-        );
-        const pageSize = 100;
-        const numPages = Math.ceil(list.length / pageSize);
-        const noPrev = page === 0;
-        const noNext = page >= numPages - 1;
-        const current = list.slice(page * pageSize, (page + 1) * pageSize);
-        const listData = current.map((item) => {
-            return {
-                key: item.upc,
-                category: item.category,
-                name: item.name,
-                upc: item.upc,
-                location: item.location
-            }
-        });
+        // let list = _.filter(data.result.upc, (x) => x.storeStatus === 'pending');
+        // const v = (obj, k = sort) =>
+        //     (k === 'aisle'
+        //         ? obj.location &&
+        //         obj.location.aisle &&
+        //         obj.location.aisle.replace(/\d+/g, (x) => String.fromCharCode(65 + parseInt(x, 10)))
+        //         : obj[k]) || 'zzzz';
+        // list = list.sort((a, b) =>
+        //     v(a) === v(b)
+        //         ? sort === 'name'
+        //         ? v(a, 'category').localeCompare(v(b, 'category'))
+        //         : v(a, 'name').localeCompare(v(b, 'name'))
+        //         : v(a).localeCompare(v(b))
+        // );
 
         StatusBar.setBarStyle('light-content', true);
         return (
             <View style={styles.root}>
                 <View style={styles.nav}>
-                    <Text style={styles.navTitle}>Products: {list.length} pending</Text>
+                    <Text style={styles.navTitle}>Products: {this.state.checklistArr.length} pending</Text>
                     <CloseButton onPress={this.handleClose}/>
                 </View>
 
@@ -205,15 +185,19 @@ class Index extends PureComponent {
                     style={styles.infiniteScrollView}
                 >
                     {
-                        checklistData.map((checklist, index) => {
+                        this.state.checklistArr.slice(0, this.state.loadNum).map((checklist, index) => {
                             return (
-                                <TouchableOpacity key={index} style={styles.checklistItem}>
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[styles.checklistItem, { backgroundColor: index % 2 === 0 ? '#edeef2' : '#ffffff' }]}
+                                    onPress={() => this.setBarcode(checklist.upc)}
+                                >
                                     <View style={styles.checklistName}>
-                                        <Text style={styles.name}>{toTitleCase(checklist.name)}</Text>
-                                        <Text style={styles.location}>{location.aisle} {location.side}</Text>
+                                        <Text style={styles.name}>{checklist.name}</Text>
+                                        <Text style={styles.location}>{checklist.priority}</Text>
                                     </View>
                                     <View style={styles.checklistCategory}>
-                                        <Text style={styles.categoryName}>{toTitleCase(checklist.category)}</Text>
+                                        <Text style={styles.categoryName}>{checklist.category}/{checklist.subcategory}</Text>
                                         <Text style={styles.upcTitle}>{checklist.upc}</Text>
                                     </View>
                                 </TouchableOpacity>
@@ -221,46 +205,6 @@ class Index extends PureComponent {
                         })
                     }
                 </InfiniteScroll>
-
-
-                 {/*<ScrollView style={styles.list} key={page}>*/}
-                 {/*    {current.map(({ category, name, upc, location }) => (*/}
-                 {/*        <TouchableOpacity key={upc} onPress={this.setBarcode.bind(this, upc)}>*/}
-                 {/*            <View style={styles.item}>*/}
-                 {/*                <View style={styles.row}>*/}
-                 {/*                    <Text style={styles.itemName}>{toTitleCase(name)}</Text>*/}
-                 {/*                    {location ? (*/}
-                 {/*                        <Text style={styles.itemLocation}>*/}
-                 {/*                            {location.aisle} {location.side}*/}
-                 {/*                        </Text>*/}
-                 {/*                    ) : null}*/}
-                 {/*                </View>*/}
-                 {/*                <View style={[styles.row, styles.itemInfo]}>*/}
-                 {/*                    <Text style={styles.category}>{toTitleCase(category)}</Text>*/}
-                 {/*                    <Text style={styles.upc}>{upc}</Text>*/}
-                 {/*                </View>*/}
-                 {/*            </View>*/}
-                 {/*        </TouchableOpacity>*/}
-                 {/*    ))}*/}
-                 {/*</ScrollView>*/}
-
-                {/*<View style={[styles.row, styles.pagination]}>*/}
-                {/*    <TouchableOpacity*/}
-                {/*        style={[styles.button, noPrev && styles.buttonDisabled]}*/}
-                {/*        onPress={noPrev ? null : this.handlePrev}*/}
-                {/*    >*/}
-                {/*        <Text>prev</Text>*/}
-                {/*    </TouchableOpacity>*/}
-                {/*    <View style={styles.paginationIndex}>*/}
-                {/*        <Text>{`${page + 1} / ${numPages}`}</Text>*/}
-                {/*    </View>*/}
-                {/*    <TouchableOpacity*/}
-                {/*        style={[styles.button, noNext && styles.buttonDisabled]}*/}
-                {/*        onPress={noNext ? null : this.handleNext}*/}
-                {/*    >*/}
-                {/*        <Text>next</Text>*/}
-                {/*    </TouchableOpacity>*/}
-                {/*</View>*/}
 
                 <Camera autoFocus wrapperStyle={styles.camera} onBarCodeRead={this.handleBarCodeReadThrottled}>
                     <View style={styles.cameraContent}>

@@ -71,7 +71,7 @@ class CaptureResultScreen extends Component {
             case 'captured':
                 return `CAPTURED (${captureData !== null && captureData.length})`;
             case 'synched':
-                const syncedNum = captureData !== null && captureData.filter(captureRow => captureRow.storeStatus === 'synched').length;
+                const syncedNum = captureData !== null && captureData.filter(captureRow => captureRow.storeStatus === 'done').length;
                 return `SYNCHED (${syncedNum})`;
             case 'pending':
                 const pendingNum = captureData !== null && captureData.filter(captureRow => captureRow.storeStatus === 'pending').length;
@@ -82,7 +82,6 @@ class CaptureResultScreen extends Component {
     };
 
     renderSyncStatus = (syncRow, i) => {
-        console.log('--- upc ---', syncRow);
         return (
             <Animatable.View style={styles.syncRowContainer} key={i}>
                 <Animatable.View style={styles.syncRowUp}>
@@ -146,7 +145,7 @@ class CaptureResultScreen extends Component {
                         </ScrollView>
                     </InfiniteScroll>;
             case 'synched':
-                return index === 2 && this._renderTabComponent('synched');
+                return index === 2 && this._renderTabComponent('done');
             case 'pending':
                 return index === 3 && this._renderTabComponent('pending');
             default:
