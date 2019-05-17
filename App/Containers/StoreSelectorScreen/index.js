@@ -34,9 +34,10 @@ class StoreSelectorScreen extends Component {
     }
 
     componentDidMount() {
-        const { prStores } = this.props;
+        const { prStores, auth } = this.props;
         const stores = _.get(prStores, 'result');
-        const storesArr = Object.values(stores['wfm']).map(store => {
+        const partner = _.get(auth, 'session.user.photoEntry.partner');
+        const storesArr =  Object.values(stores[partner]).map(store => {
             return {
                 value: store.key,
                 label: `${store.name} - ${store.city} ${store.state}`,

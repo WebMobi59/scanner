@@ -5,7 +5,7 @@ import * as scale from '../../Utils/Scale'
 
 export default StyleSheet.create({
     root: {
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.white,
         height: Metrics.screenHeight
     },
     nav: {
@@ -27,7 +27,33 @@ export default StyleSheet.create({
         lineHeight: 41 * scale.heightRatio
     },
     searchInputWrapper: {
-
+        position: 'relative',
+        marginTop: 12 * scale.heightRatio,
+        flexDirection: 'row',
+        alignSelf: 'center',
+        alignItems: 'center',
+        width: 348 * scale.widthRatio,
+        height: 36 * scale.heightRatio,
+        borderRadius: 4 * scale.heightRatio,
+        borderStyle: 'solid',
+        borderWidth: scale.widthRatio
+    },
+    searchInputText: {
+        color: '#1f2952',
+        fontFamily: Fonts.type.bold,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '600',
+        letterSpacing: -0.12 * scale.widthRatio
+    },
+    removeSearchTextWrapper: {
+        position: 'absolute',
+        right: 10 * scale.widthRatio,
+        width: 16 * scale.widthRatio,
+        height: 16 * scale.widthRatio
+    },
+    removeSearchText: {
+        width: '100%',
+        height: '100%'
     },
     list: {
         flex: 1
@@ -49,7 +75,7 @@ export default StyleSheet.create({
     },
     itemInfo: {
         backgroundColor: '#ddd',
-        paddingVertical: 2
+        paddingVertical: 2 * scale.heightRatio
     },
     category: {
         flex: 1
@@ -65,7 +91,7 @@ export default StyleSheet.create({
     cameraContent: {
         alignSelf: 'stretch',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        padding: 2
+        padding: 2 * scale.widthRatio
     },
     cameraText: {
         color: 'white',
@@ -98,11 +124,61 @@ export default StyleSheet.create({
         padding: Metrics.baseMargin,
         margin: Metrics.baseMargin / 2,
         backgroundColor: Colors.green,
-        borderRadius: 4,
-        width: 100,
+        borderRadius: 4 * scale.heightRatio,
+        width: 100 * scale.widthRatio,
         alignItems: 'center'
     },
     buttonDisabled: {
         backgroundColor: Colors.gray
+    },
+    infiniteScrollView: {
+        flex: 1
+    },
+    checklistItem: {
+        // alignItems: 'center',
+        paddingHorizontal: 8 * scale.widthRatio,
+        paddingVertical: 8 * scale.heightRatio,
+        borderColor: '#e6eaee',
+        borderStyle: 'solid',
+        borderWidth: scale.widthRatio
+    },
+    checklistName: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    name: {
+        color: '#1f2952',
+        fontFamily: Fonts.type.bold,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '700',
+        letterSpacing: -0.1 * scale.widthRatio
+    },
+    location: {
+        color: '#1f2952',
+        fontFamily: Fonts.type.base,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '400',
+        letterSpacing: -0.1 * scale.widthRatio
+    },
+    checklistCategory: {
+        marginTop: 2 * scale.heightRatio,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    categoryName: {
+        color: '#1f2952',
+        fontFamily: Fonts.type.base,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '400',
+        letterSpacing: -0.1 * scale.widthRatio
+    },
+    upcTitle: {
+        color: '#1f2952',
+        fontFamily: Fonts.type.base,
+        fontSize: 14 * scale.widthRatio,
+        fontWeight: '400',
+        letterSpacing: 0.5 * scale.widthRatio
     }
 })

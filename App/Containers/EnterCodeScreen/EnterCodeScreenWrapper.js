@@ -11,7 +11,6 @@ class EnterCodeScreenWrapper extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        getCodeCreate: state.startup.getCodeCreate
     }
 };
 

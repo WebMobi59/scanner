@@ -27,8 +27,7 @@ const QUERY_CHECK_CODE = gql`
 
 class EnterCodeScreen extends Component {
     static propTypes = {
-        createAccount: PropTypes.func.isRequired,
-        prCodeCreate: PropTypes.func.isRequired
+        createAccount: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -38,9 +37,7 @@ class EnterCodeScreen extends Component {
             visibleHeight: Metrics.screenHeight,
             code: {value: null, valid: false, error: null},
             loading: false,
-            error: null,
-            serverCode: '',
-            partner: 'wfm'
+            error: null
         };
 
         this.isLoggingIn = false;
@@ -62,17 +59,6 @@ class EnterCodeScreen extends Component {
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
         this.keyboardDidHideScrollBackListener.remove()
-    }
-
-    async componentDidMount({variables = {}} = {}) {
-        // const { partner } = this.state;
-        // const getCode = await this.props.prCodeCreate({ partner });
-        // console.log('-- get code --', getCode);
-        // AsyncStorage.getItem('getCodeCreate').then(getCodeCreate => {
-        //
-        // });
-        // const { getCodeCreate } = JSON.parse(await AsyncStorage.getItem('getCodeCreate'));
-        // this.setState({ serverCode: getCodeCreate });
     }
 
     isValid() {
@@ -142,7 +128,6 @@ class EnterCodeScreen extends Component {
 
     render() {
         const {visibleHeight, code, loading, error} = this.state;
-        console.log('-- server code --', this.state.serverCode);
         StatusBar.setBarStyle('light-content', true);
         return (
             <ScrollView
@@ -233,19 +218,7 @@ const enhance = compose(
         ({auth}) => ({isAuthenticated: _get(auth, 'session.isAuthenticated', false)})
     ),
     withLogin,
-    withCreateAccount,
-    withApollo(
-        'mutation prCodeCreate',
-        { partner: 'String!' },
-        null,
-        null
-    ),
-    withApollo(
-        'mutation prCodeClaim',
-        { code: 'String' },
-        '... Session',
-        require('../../GraphQL/Account/fragments/session').default
-    )
+    withCreateAccount
 );
 
 export default enhance(EnterCodeScreen);

@@ -64,9 +64,7 @@ class Index extends React.Component {
             opacityAnimation: new Animated.Value(0),
             possibleUpcs: [],
             barcodeCounter: 0,
-            nextBarcode: null,
-            partner: 'wfm',
-            code: 'Z1G7PAV4'
+            nextBarcode: null
         }
     }
 
@@ -82,15 +80,6 @@ class Index extends React.Component {
             duration: 250,
             toValue: this.state.visibleHeight / 2 - Metrics.barcodeHeight / 2
         }).start();
-
-        // setTimeout(() => {
-        //   this.handleBarCodeRead({ data: '011110749086' })
-        // }, 4000)
-
-        const { partner } = this.state;
-        const getCodeInformation = await this.props.prCodeCreate({ partner });
-        await AsyncStorage.setItem('getCodeCreate', JSON.stringify({getCodeCreate: getCodeInformation}));
-        this.props.saveCode(getCodeInformation);
     }
 
     animateBarcodeFrame = () => {
@@ -401,19 +390,7 @@ const enhance = compose(
         ({auth}) => ({isAuthenticated: _get(auth, 'session.isAuthenticated', false)})
     ),
     withLogin,
-    withCreateAccount,
-    withApollo(
-        'mutation prCodeCreate',
-        {partner: 'String!'},
-        null,
-        null
-    ),
-    // withApollo(
-    //     'mutation prCodeClaim',
-    //     { code: 'String' },
-    //     null,
-    //     null
-    // )
+    withCreateAccount
 );
 
 export default enhance(withNavigationFocus(Index, 'Index'))

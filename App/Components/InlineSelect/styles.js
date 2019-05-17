@@ -7,7 +7,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         borderWidth: 1 * scale.widthRatio,
         borderColor: '#4a7ffb',
-        borderRadius: 8 * scale.heightRatio,
+        borderRadius: 4 * scale.heightRatio,
         backgroundColor: Colors.white,
         overflow: 'hidden'
     },

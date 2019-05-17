@@ -5,6 +5,7 @@ import API from '../Services/Api'
 import {AsyncStorage} from 'react-native'
 import {ApolloClient} from 'apollo-client'
 import {ApolloLink} from 'apollo-link'
+import { createHttpLink } from 'apollo-link-http';
 import {onError} from 'apollo-link-error'
 import {createUploadLink} from 'apollo-upload-client'
 import {InMemoryCache} from 'apollo-cache-inmemory'
@@ -13,7 +14,7 @@ import {setContext} from 'apollo-link-context'
 import {RetryLink} from 'apollo-link-retry'
 import {get as _get, forEach as _forEach} from 'lodash'
 
-const BUILD_NUMBER = 2
+const BUILD_NUMBER = 2;
 const SCHEMA_VERSION_KEY = 'schemaVersion'
 const SCHEMA_VERSION = `0.1.2b${BUILD_NUMBER}`
 
@@ -21,7 +22,7 @@ let _persistor = null
 
 export const restoreOrPurgeCache = async (persistor, override = false) => {
     // Read the current schema version from AsyncStorage.
-    const currentVersion = await AsyncStorage.getItem(SCHEMA_VERSION_KEY)
+    const currentVersion = await AsyncStorage.getItem(SCHEMA_VERSION_KEY);
     if (!_persistor && persistor) {
         _persistor = persistor
     }
@@ -75,7 +76,7 @@ export const getApolloClient = () => {
 
     const uploadLink = createUploadLink({
         uri: `${Secrets.API_BASE_URL}/graphql`,
-        credentials: 'same-origin',
+        credentials: 'include',
         fetch: (uri, options, ...rest) => {
             try {
                 if (options.body && typeof options.body === 'string') {
@@ -89,13 +90,18 @@ export const getApolloClient = () => {
         }
     })
 
-    const cookieLink = new ApolloLink((operation, forward) => {
+    const httpLink = createHttpLink({
+        uri: `${Secrets.API_BASE_URL}/graphql`,
+        credentials: 'include'
+    });
+
+    const cookieLink_ = new ApolloLink((operation, forward) => {
         console.log('apollo operation', operation)
 
         return forward(operation).map((response) => {
-            const context = operation.getContext()
+            const context = operation.getContext();
             const {
-                response: {headers}
+                response: { headers }
             } = context
             if (headers.get('set-cookie')) {
                 // Set cookies from a response header
@@ -111,6 +117,8 @@ export const getApolloClient = () => {
             return response
         })
     })
+
+    const cookieLink = cookieLink_.concat(httpLink);
 
     const errorLink = onError(({graphQLErrors, networkError, response, operation}) => {
         if (operation.operationName === 'trackingRecentEntries') {
