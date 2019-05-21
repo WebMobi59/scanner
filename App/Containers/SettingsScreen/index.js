@@ -2,22 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {View, Text, Alert, ScrollView, TouchableOpacity, Image, StatusBar} from 'react-native';
 import {compose, withPropsOnChange} from 'recompose';
-import {get as _get} from 'lodash';
+import _, {get as _get} from 'lodash';
 import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import VersionNumber from 'react-native-version-number';
 
 import withApollo from '../../Decorators/withApollo';
 import toTitleCase from '../../Utils/toTitleCase';
 import {Metrics, Colors, Images} from '../../Themes';
 import ValidatedFormScreen from '../ValidatedFormScreen';
-import Button from '../../Components/Button';
-import CloseButton from '../../Components/CloseButton';
 import { apolloClient } from '../../Lib/Apollo';
 import withData from '../../Decorators/withData';
 import SageActions from '../../Redux/SageRedux';
-import SegmentedControlTab from "react-native-segmented-control-tab";
+import SegmentedControlTab from 'react-native-segmented-control-tab';
+import RNPickerSelect from 'react-native-picker-select';
 
 // React Apollo
 import {withAuth, withLogout} from '../../GraphQL/Account/decorators';
@@ -27,6 +25,7 @@ import { CustomHeader } from '../../Components/CustomHeader';
 
 import styles from './styles';
 import * as scale from '../../Utils/Scale';
+import Storage from '../../Utils/Storage'
 
 const QUERY_PR_DATA = gql`
   query prData($updatedDate: String) {
@@ -55,13 +54,36 @@ class Index extends ValidatedFormScreen {
             loading: false,
             selectedIndex1: 0,
             selectedIndex2: 0,
-            captureData: null
+            captureData: null,
+            items: [],
+            selectedStore: '',
+            selectedStoreLabel: ''
         };
 
-        this.scrollY = 0
+        this.scrollY = 0;
     }
 
     async componentDidMount({variables = {}} = {}) {
+        const { prStores, auth } = this.props;
+        const mode = _.get(auth, 'session.user.photoEntry.mode');
+        const stores = _.get(prStores, 'result');
+        const partner = _.get(auth, 'session.user.photoEntry.partner');
+        const storesArr =  Object.values(stores[partner]).map(store => {
+            return {
+                value: store.key,
+                label: `${store.name} - ${store.city} ${store.state}`,
+                texts: {
+                    up: `${store.city} ${store.state}`,
+                    bottom: store.name
+                }
+            }
+        });
+        this.setState({ items: storesArr })
+        if (mode === 'photographer') {
+            this.setState({ selectedIndex1: 0 });
+        } else {
+            this.setState({ selectedIndex1: 1 });
+        }
         this.setState({ loading: true });
         try {
             const response = await apolloClient.query({
@@ -79,19 +101,27 @@ class Index extends ValidatedFormScreen {
         }
     }
 
+    selectStore = (value) => {
+        this.setState({ selectedStore: value }, () => {
+            this.setState({ selectedStoreLabel: this.state.items.filter(item => item.value === value)[0].texts });
+        });
+    };
+
+    updateStore = async () => {
+        // this.setState({ loading: true });
+        await this.props.prUserUpdate({ store: this.state.selectedStore });
+        await Storage.fetch();
+        // this.setState({ loading: false });
+    };
+
     handleIndexChange(type, index) {
         if (type === 1) {
-            this.setState({
-                ...this.state,
-                selectedIndex1: index
+            this.setState({ ...this.state, selectedIndex1: index }, () => {
+                this.updateMode();
             });
         } else {
-            this.setState({
-                ...this.state,
-                selectedIndex2: index
-            });
+            this.setState({ ...this.state, selectedIndex2: index });
         }
-
     };
 
     componentWillReceiveProps(newProps) {
@@ -99,11 +129,19 @@ class Index extends ValidatedFormScreen {
         const {user: newUser} = newProps;
         if (newUser) {
             if (oldUser.displayName !== newUser.displayName) {
-                this.setState({displayName: newUser.displayName})
+                this.setState({displayName: newUser.displayName});
             }
             if (oldUser.email !== newUser.email) {
-                this.setState({email: newUser.email})
+                this.setState({email: newUser.email});
             }
+        }
+    }
+
+    updateMode = async () => {
+        if (this.state.selectedIndex1 === 0) {
+            this.props.prUserUpdate({ mode: 'photographer' });
+        } else {
+            this.props.prUserUpdate({ mode: 'runner' });
         }
     }
 
@@ -164,11 +202,15 @@ class Index extends ValidatedFormScreen {
 
     render() {
         const {data, tag, setTag, autoQuickSync, setAutoQuickSync, auth, prStores, prUserUpdate} = this.props;
-        const {loading, captureData} = this.state;
+        const stores = _.get(prStores, 'result');
+        const partner = _.get(auth, 'session.user.photoEntry.partner');
+        const keyForCurrentStore = _.get(auth, 'session.user.photoEntry.store');
+        const currentStore = stores !== undefined && Object.values(stores[partner]).filter(item => item.key === keyForCurrentStore);
+        const { loading, captureData, selectedStore, selectedStoreLabel } = this.state;
 
         StatusBar.setBarStyle('dark-content', true);
         return (
-            <View style={styles.container}>
+            <Animatable.View style={styles.container}>
                 <CustomHeader
                     onClose={this.handleClose}
                 />
@@ -176,14 +218,14 @@ class Index extends ValidatedFormScreen {
                     style={styles.innerContainer}
                     contentContainerStyle={{}}
                 >
-                    <View style={styles.userInfo}>
+                    <Animatable.View style={styles.userInfo}>
                         <Text style={styles.userName}>Hi, {auth.session.user.displayName}</Text>
                         <Text style={styles.account}>Account</Text>
-                    </View>
-                    <View style={styles.modeSelect}>
-                        <Text style={styles.modeTitle}>{this.state.selectedIndex1 === 0 ? 'Photo' : 'Runner'} Mode</Text>
-                        <Text style={styles.modeDescription}>{this.state.selectedIndex1 === 0 ? 'Capturing photos of products' : 'Checking and pulling products'}</Text>
-                        <View style={styles.modeSelectTabContainer}>
+                    </Animatable.View>
+                    <Animatable.View style={styles.modeSelect}>
+                        <Animatable.Text style={styles.modeTitle}>{this.state.selectedIndex1 === 0 ? 'Photo' : 'Runner'} Mode</Animatable.Text>
+                        <Animatable.Text style={styles.modeDescription}>{this.state.selectedIndex1 === 0 ? 'Capturing photos of products' : 'Checking and pulling products'}</Animatable.Text>
+                        <Animatable.View style={styles.modeSelectTabContainer}>
                             <SegmentedControlTab
                                 tabsContainerStyle={[styles.tabContainerStyle, { width: 228 * scale.widthRatio }]}
                                 values={["PHOTO MODE", "RUNNER MODE"]}
@@ -194,37 +236,55 @@ class Index extends ValidatedFormScreen {
                                 activeTabTextStyle={styles.activeTabTextStyle}
                                 tabTextStyle={styles.tabTextStyle}
                             />
-                        </View>
-                    </View>
-                    <View style={styles.storeSelect}>
-                        <View style={styles.storeTitle}>
-                            <Text style={styles.storeTitleText}>Store</Text>
-                            <Text style={styles.storeDescriptionText}>Kroger - Anderson Township</Text>
-                        </View>
-                        <TouchableOpacity onPress={this.handleSelectStore} style={styles.storeSelectMoveButton}>
-                            <Text style={styles.storeSelectMoveButtonText}>SELECT STORE</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.getUpgrade}>
-                        <View style={styles.upgradeTitle}>
-                            <Text style={styles.upgradeTitleText}>App Version</Text>
-                            <Text style={styles.upgradeDescriptionText}>{`v${VersionNumber.appVersion} — Build ${VersionNumber.buildVersion}`}</Text>
-                        </View>
+                        </Animatable.View>
+                    </Animatable.View>
+                    <Animatable.View style={styles.storeSelect}>
+                        <Animatable.Text style={styles.storeTitleText}>Store</Animatable.Text>
+                        {
+                            currentStore !== undefined && _.isArray(currentStore) &&
+                            <RNPickerSelect
+                                placeholder={{ label: 'Choose One' }}
+                                placeholderTextColor={'#1f2952'}
+                                items={this.state.items}
+                                onValueChange={this.selectStore}
+                                value={selectedStore}
+                            >
+                                <View style={styles.selectStorePart}>
+                                    {
+                                        !!selectedStore ?
+                                            <Animatable.Text style={styles.upText}>{selectedStoreLabel && selectedStoreLabel.up}</Animatable.Text> :
+                                            <Animatable.Text style={styles.storeDescriptionText}>
+                                                {partner} - {currentStore[0].city} {currentStore[0].state}
+                                            </Animatable.Text>
+                                    }
+
+                                    <TouchableOpacity onPress={this.handleSelectStore} style={styles.storeSelectMoveButton}>
+                                        <Text style={styles.storeSelectMoveButtonText}>SELECT STORE</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </RNPickerSelect>
+                        }
+                    </Animatable.View>
+                    <Animatable.View style={styles.getUpgrade}>
+                        <Animatable.View style={styles.upgradeTitle}>
+                            <Animatable.Text style={styles.upgradeTitleText}>App Version</Animatable.Text>
+                            <Animatable.Text style={styles.upgradeDescriptionText}>{`v${VersionNumber.appVersion} — Build ${VersionNumber.buildVersion}`}</Animatable.Text>
+                        </Animatable.View>
                         {
                             this.state.selectedIndex1 !== 0 &&
                             <TouchableOpacity style={styles.upgradeMoveButton}>
-                                <Text style={styles.upgradeMoveButtonText}>GET UPGRADE</Text>
+                                <Animatable.Text style={styles.upgradeMoveButtonText}>GET UPGRADE</Animatable.Text>
                             </TouchableOpacity>
                         }
-                    </View>
-                    <View style={styles.productCaptureSelect}>
-                        <Text style={styles.productCaptureSelectTitle}>Product Capture Priority</Text>
-                        <Text style={styles.productCaptureSelectDescription}>
+                    </Animatable.View>
+                    <Animatable.View style={styles.productCaptureSelect}>
+                        <Animatable.Text style={styles.productCaptureSelectTitle}>Product Capture Priority</Animatable.Text>
+                        <Animatable.Text style={styles.productCaptureSelectDescription}>
                             {this.state.selectedIndex2 === 0 && 'Capturing products that must be done in this store'}
                             {this.state.selectedIndex2 === 1 && 'Capturing high-priority products that are likely in this store'}
                             {this.state.selectedIndex2 === 2 && 'Capturing any possible product that needs capture'}
-                        </Text>
-                        <View style={styles.productCaptureSelectTabContainer}>
+                        </Animatable.Text>
+                        <Animatable.View style={styles.productCaptureSelectTabContainer}>
                             <SegmentedControlTab
                                 tabsContainerStyle={[styles.tabContainerStyle, { width: 342 * scale.widthRatio }]}
                                 values={["STORE LIST", "HIGH PRIORITY", "ALL PRODUCTS"]}
@@ -235,22 +295,22 @@ class Index extends ValidatedFormScreen {
                                 activeTabTextStyle={styles.activeTabTextStyle}
                                 tabTextStyle={styles.tabTextStyle}
                             />
-                        </View>
-                    </View>
-                    <View style={styles.sessionCaptureStatus}>
+                        </Animatable.View>
+                    </Animatable.View>
+                    <Animatable.View style={styles.sessionCaptureStatus}>
                         <TouchableOpacity style={styles.sessionCaptureMoveDetailButton} onPress={this.handleCaptureResultScreen}>
-                            <View style={styles.sessionCaptureMoveDetailButtonTextContainer}>
-                                <Text style={styles.sessionCaptureMoveDetailButtonText}>Session Capture Status</Text>
-                            </View>
+                            <Animatable.View style={styles.sessionCaptureMoveDetailButtonTextContainer}>
+                                <Animatable.Text style={styles.sessionCaptureMoveDetailButtonText}>Session Capture Status</Animatable.Text>
+                            </Animatable.View>
                             <Image source={Images.arrowRight} style={styles.arrowIcon}/>
                         </TouchableOpacity>
-                        <Text style={styles.sessionCaptureDetail}>
+                        <Animatable.Text style={styles.sessionCaptureDetail}>
                             {captureData !== null && captureData.length} Captured;
                             {captureData !== null && captureData.filter(upc => upc.storeStatus === 'done').length} Synced;
                             {captureData !== null && captureData.filter(upc => upc.storeStatus === 'pending').length} Pending Sync
-                        </Text>
-                        <View style={styles.barStyle}>
-                            <View
+                        </Animatable.Text>
+                        <Animatable.View style={styles.barStyle}>
+                            <Animatable.View
                                 style={
                                     [styles.activeBarStyle,
                                         { width: `${captureData !== null && captureData.length > 0 ? captureData.filter(upc => upc.storeStatus === 'pending').length / captureData.length * 100 : 100}%`
@@ -258,43 +318,43 @@ class Index extends ValidatedFormScreen {
                                     ]
                                 }
                             />
-                        </View>
-                        <Text style={styles.statusDetail}>
+                        </Animatable.View>
+                        <Animatable.Text style={styles.statusDetail}>
                             Sync Status: { captureData !== null && captureData.length > 0 ? captureData.filter(upc => upc.storeStatus === 'pending').length / captureData.length * 100 : 100 }% synced to server
-                        </Text>
+                        </Animatable.Text>
                         <TouchableOpacity style={styles.manualSyncButton} onPress={this.handleSyncScreen}>
-                            <Text style={styles.manualSyncButtonText}>FORCE MANUAL SYNC</Text>
+                            <Animatable.Text style={styles.manualSyncButtonText}>FORCE MANUAL SYNC</Animatable.Text>
                         </TouchableOpacity>
-                    </View>
-                    <View style={styles.messageSection}>
-                        <View style={styles.messageStatus}>
+                    </Animatable.View>
+                    <Animatable.View style={styles.messageSection}>
+                        <Animatable.View style={styles.messageStatus}>
                             <TouchableOpacity style={styles.messageStatusText} onPress={this.handleMessageScreen}>
-                                <View style={styles.messageStatusTitleTextContainer}>
-                                    <Text style={styles.messageStatusTitleText}>Your Messages</Text>
-                                </View>
+                                <Animatable.View style={styles.messageStatusTitleTextContainer}>
+                                    <Animatable.Text style={styles.messageStatusTitleText}>Your Messages</Animatable.Text>
+                                </Animatable.View>
                                 <Image source={Images.arrowRight} style={styles.arrowIcon}/>
                             </TouchableOpacity>
                             <Text style={styles.messageStatusDetail}>0 messages</Text>
-                        </View>
-                    </View>
+                        </Animatable.View>
+                    </Animatable.View>
                     <TouchableOpacity onPress={this.handleProductChecklist} style={styles.buttonContainer}>
-                        <Image source={Images.diary} style={[styles.leftIcon, { width: 20 * scale.widthRatio, height: 20 * scale.widthRatio }]} />
-                        <Text style={[styles.rightText, { color: '#4a7ffb' }]}>View Product Checklist</Text>
+                        <Animatable.Image source={Images.diary} style={[styles.leftIcon, { width: 20 * scale.widthRatio, height: 20 * scale.widthRatio }]} />
+                        <Animatable.Text style={[styles.rightText, { color: '#4a7ffb' }]}>View Product Checklist</Animatable.Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonContainer}>
-                        <Image source={Images.sms} style={[styles.leftIcon, { width: 20 * scale.widthRatio, height: 13 * scale.widthRatio }]} />
-                        <Text style={[styles.rightText, { color: '#4a7ffb' }]}>Message Support</Text>
+                        <Animatable.Image source={Images.sms} style={[styles.leftIcon, { width: 20 * scale.widthRatio, height: 13 * scale.widthRatio }]} />
+                        <Animatable.Text style={[styles.rightText, { color: '#4a7ffb' }]}>Message Support</Animatable.Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.handleResetAllTheData} style={styles.buttonContainer}>
-                        <Image source={Images.delete} style={[styles.leftIcon, { width: 17 * scale.widthRatio, height: 20 * scale.widthRatio }]} />
-                        <Text style={[styles.rightText, { color: '#f54370' }]}>Reset All Data & Restart Session</Text>
+                        <Animatable.Image source={Images.delete} style={[styles.leftIcon, { width: 17 * scale.widthRatio, height: 20 * scale.widthRatio }]} />
+                        <Animatable.Text style={[styles.rightText, { color: '#f54370' }]}>Reset All Data & Restart Session</Animatable.Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.handlePressLogout} style={styles.buttonContainer}>
-                        <Image source={Images.logout} style={[styles.leftIcon, { width: 18 * scale.widthRatio, height: 18 * scale.widthRatio }]} />
-                        <Text style={[styles.rightText, { color: '#f54370' }]}>Log Out</Text>
+                        <Animatable.Image source={Images.logout} style={[styles.leftIcon, { width: 18 * scale.widthRatio, height: 18 * scale.widthRatio }]} />
+                        <Animatable.Text style={[styles.rightText, { color: '#f54370' }]}>Log Out</Animatable.Text>
                     </TouchableOpacity>
                 </ScrollView>
-            </View>
+            </Animatable.View>
         )
     }
 }
@@ -323,7 +383,7 @@ const enhance = compose(
     ),
     withApollo(
         'mutation prUserUpdate',
-        {store: 'String', priority: 'String'},
+        {store: 'String', priority: 'String', mode: 'String'},
         '... Session',
         require('../../GraphQL/Account/fragments/session').default
     ),
