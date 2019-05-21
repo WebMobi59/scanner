@@ -82,15 +82,10 @@ export default StyleSheet.create({
         letterSpacing: -0.08 * scale.widthRatio
     },
     storeSelect: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         paddingVertical: 15 * scale.heightRatio,
         borderColor: '#ededed',
         borderStyle: 'solid',
         borderBottomWidth: scale.heightRatio
-    },
-    storeTitle: {
     },
     storeTitleText: {
         color: '#1f2952',
@@ -98,6 +93,11 @@ export default StyleSheet.create({
         fontSize: 14 * scale.widthRatio,
         fontWeight: '400',
         letterSpacing: -0.1 * scale.widthRatio
+    },
+    selectStorePart: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     storeDescriptionText: {
         opacity: 0.5,
