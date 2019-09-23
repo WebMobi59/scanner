@@ -31,7 +31,7 @@ The app makes a few core changes to Ignite's boilerplate
 
 ## :information_source: Setup
 
-**Step 1:** git clone this repo: `git clone https://github.com/sageapp/scanner-app.git sage-scanner-app`
+**Step 1:** git clone this repo: `git clone https://github.com/webmobi59/scanner-app.git sage-scanner-app`
 
 **Step 2:** cd to the cloned repo: `cd sage-scanner-app`
 
